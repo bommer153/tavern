@@ -463,40 +463,6 @@
   font-size: var(--tv-fs-xs);
   color: var(--tv-ink-3);
 }
-.reveal {
-  --c: var(--tv-cut);
-  --plate-fill: var(--tv-bg-2);
-  position: relative;
-  display: flex;
-  align-items: center;
-  height: 150px;
-  margin-bottom: var(--tv-s4);
-  padding: 0 var(--tv-s5);
-  overflow: hidden;
-  animation: tv-rise var(--tv-slow) var(--tv-ease) both;
-}
-.revealText {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: var(--tv-s3);
-}
-.revealTitle {
-  font-weight: 650;
-}
-.burst {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-}
-.burst > span {
-  animation: tv-pop 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
-}
-
 .timer {
   font-family: var(--tv-mono);
   font-variant-numeric: tabular-nums;

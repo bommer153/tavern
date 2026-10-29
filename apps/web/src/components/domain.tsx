@@ -1,13 +1,13 @@
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { type CompanionCard as Card, type Gift, ORDER_STATUS_LABELS, type OrderStatus, type VoiceRoom } from '@tavern/shared';
+import { type CompanionCard as Card, ORDER_STATUS_LABELS, type OrderStatus, type VoiceRoom } from '@tavern/shared';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { api, errorMessage, formatPhp, newKey } from '@/lib/api';
 import { useSession } from '@/lib/session';
 import s from './domain.module.css';
 import { Icon } from './icon';
-import { Tavern3DScene } from './three/stage';
+import { playGiftEffect } from './gift-effect';
 import { Avatar, Badge, Button, cn, ErrorNote, GameTile, gameArt, gameLogo, GiftGlyph, LiveBadge, Modal, placeholderAvatar, Select, Skeleton, Stars, type Tone } from './ui';
 
 /** Character card for a companion: portrait over their game's colours. Pass `following` (signed-in viewers only) to show the follow toggle. */
@@ -163,50 +163,25 @@ export function GiftPicker({
   const [selected, setSelected] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
   const [key, setKey] = useState(newKey);
-  const [celebrate, setCelebrate] = useState<{ image: string; label: string; rarity: Gift['rarity']; nonce: number } | null>(null);
   const gift = gifts.data?.find((g) => g.id === selected);
   const total = gift ? gift.coinCost * qty : 0;
   const balance = wallet.data?.balance ?? 0;
 
   const send = useMutation({
     mutationFn: () => api.gifts.send({ giftId: selected!, recipientId: recipient.id, quantity: qty, context, contextId, idempotencyKey: key }),
-    // Celebrations (2D or 3D) start here only — after the server confirmed the transaction.
+    // The effect starts only after the server confirmed the transaction; the picker gets out of its way.
     onSuccess: (r) => {
       qc.setQueryData(['wallet'], (w: any) => (w ? { ...w, balance: r.balance } : w));
       qc.invalidateQueries({ queryKey: ['wallet'] });
-      const nonce = Date.now();
-      const high = gift!.rarity === 'epic' || gift!.rarity === 'legendary';
-      setCelebrate({ image: gift!.imageUrl, label: `${qty}× ${gift!.name}`, rarity: gift!.rarity, nonce });
       setKey(newKey()); // next send is a new transaction
-      setTimeout(() => setCelebrate((c) => (c?.nonce === nonce ? null : c)), high ? 2200 : 1200);
+      onClose();
+      // In rooms the socket's room:gift event plays it for everyone, sender included.
+      if (context !== 'room') playGiftEffect({ id: r.transactionId, image: gift!.imageUrl, animation: gift!.animation, rarity: gift!.rarity, quantity: qty });
     },
   });
-  const reveal = celebrate && (celebrate.rarity === 'epic' || celebrate.rarity === 'legendary') ? celebrate : null;
 
   return (
     <Modal open={open} onClose={onClose} title={`Send a gift to ${recipient.displayName}`} wide>
-      {celebrate && !reveal && (
-        <div className={s.burst} aria-live="polite">
-          <span>
-            <GiftGlyph image={celebrate.image} size={150} />
-          </span>
-          <span className="tv-sr-only">Gift sent</span>
-        </div>
-      )}
-      {reveal && (
-        <div className={cn('tv-plate', s.reveal)} aria-live="polite">
-          <Tavern3DScene scene="gift" rarity={reveal.rarity as 'epic' | 'legendary'} nonce={reveal.nonce} bare />
-          <div className={s.revealText}>
-            <GiftGlyph image={reveal.image} size={44} />
-            <div>
-              <p className={s.revealTitle} style={{ color: reveal.rarity === 'legendary' ? 'var(--tv-gold)' : 'var(--tv-violet-hi)' }}>
-                Sent {reveal.label}
-              </p>
-              <p style={{ fontSize: 'var(--tv-fs-sm)', color: 'var(--tv-ink-2)' }}>to {recipient.displayName}</p>
-            </div>
-          </div>
-        </div>
-      )}
       {gifts.isPending ? (
         <Skeleton style={{ height: 200 }} />
       ) : (

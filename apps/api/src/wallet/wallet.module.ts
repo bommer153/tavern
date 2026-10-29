@@ -93,7 +93,7 @@ export class GiftsService {
       const sender = await this.users.findById(senderId, { displayName: 1, avatarUrl: 1 }).lean();
       const event = {
         transactionId: String(txId),
-        gift: { id: String(gift._id), name: gift.name, imageUrl: gift.imageUrl, rarity: gift.rarity },
+        gift: { id: String(gift._id), name: gift.name, imageUrl: gift.imageUrl, animation: gift.animation || undefined, rarity: gift.rarity },
         quantity: i.quantity,
         sender: { id: senderId, displayName: sender?.displayName },
         recipient: { id: i.recipientId, displayName: recipient.displayName },
@@ -185,6 +185,7 @@ export const toGift = (g: any) => ({
   name: g.name,
   coinCost: g.coinCost,
   imageUrl: g.imageUrl,
+  animation: g.animation || undefined,
   category: g.category,
   rarity: g.rarity,
   active: g.active,

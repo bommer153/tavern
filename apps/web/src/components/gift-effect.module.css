@@ -1,0 +1,141 @@
+/* Full-screen gift moment: dims the app, flashes the rarity colour, then plays the effect. Never blocks input. */
+.stage {
+  --fx: var(--tv-pink);
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--fx) 22%, transparent), rgb(6 5 26 / 0.72) 70%);
+  animation: fade-in 260ms var(--tv-ease) both;
+}
+.rare {
+  --fx: var(--tv-cyan);
+}
+.epic {
+  --fx: var(--tv-violet-hi);
+}
+.legendary {
+  --fx: var(--tv-gold);
+}
+.leaving {
+  animation: fade-out 350ms var(--tv-ease) both;
+}
+.stage > * {
+  grid-area: 1 / 1;
+}
+
+.flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, color-mix(in srgb, var(--fx) 70%, #fff), transparent 60%);
+  animation: flash 700ms ease-out both;
+}
+.scene {
+  position: absolute;
+  inset: 0;
+}
+.rays {
+  width: min(120vmin, 900px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--fx) 45%, transparent) 0 6deg, transparent 6deg 24deg);
+  mask: radial-gradient(circle, #000 10%, transparent 65%);
+  animation: spin 9s linear infinite, grow 600ms var(--tv-ease-spring) both;
+}
+.glyph {
+  position: relative;
+  filter: drop-shadow(0 0 40px var(--fx));
+  animation: pop 900ms var(--tv-ease-spring) both, bob 2.4s 900ms ease-in-out infinite alternate;
+}
+.media {
+  width: min(100vw, 720px);
+  max-height: 100dvh;
+  object-fit: contain;
+}
+/* Effect videos are rendered on pure black (MP4 has no alpha): screen blending drops the black and keeps the glow.
+   The overlay is its own blend group, so its backdrop goes solid for videos; otherwise the video's rectangle shows. */
+.screen {
+  mix-blend-mode: screen;
+}
+.cinema {
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--fx) 16%, #06051a), #06051a 70%);
+}
+.combo {
+  align-self: end;
+  margin-bottom: max(14vh, 96px);
+  font-family: var(--tv-display);
+  font-size: clamp(3rem, 12vw, 6rem);
+  font-weight: 800;
+  font-style: italic;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 24px var(--fx), 0 4px 0 color-mix(in srgb, var(--fx) 60%, #000);
+  animation: slam 500ms 250ms var(--tv-ease-spring) both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes flash {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes spin {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes grow {
+  from {
+    scale: 0.2;
+    opacity: 0;
+  }
+}
+@keyframes pop {
+  0% {
+    transform: scale(0.2) rotate(-12deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15) rotate(4deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes bob {
+  to {
+    transform: translateY(-14px);
+  }
+}
+@keyframes slam {
+  from {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage *,
+  .stage {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

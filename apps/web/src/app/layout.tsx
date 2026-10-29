@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Chakra_Petch, Geist, Geist_Mono, Kaushan_Script } from 'next/font/google';
+import { GiftEffectHost } from '@/components/gift-effect';
 import { Providers } from '@/lib/session';
 import './globals.css';
 
@@ -20,7 +21,10 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en" className={`${geist.variable} ${mono.variable} ${script.variable} ${display.variable}`}>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <GiftEffectHost />
+        </Providers>
       </body>
     </html>
   );

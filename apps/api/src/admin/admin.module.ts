@@ -39,6 +39,7 @@ const giftBody = z.object({
   name: z.string().min(1).max(40),
   coinCost: z.number().int().min(1).max(1_000_000),
   imageUrl: z.string().min(1).max(500),
+  animation: z.string().max(500).optional(), // '' clears it
   category: z.string().max(30).optional(),
   rarity: z.enum(GIFT_RARITIES).optional(),
   active: z.boolean().optional(),

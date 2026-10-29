@@ -406,15 +406,6 @@
 }
 
 /* ---------- Overlays ---------- */
-.burst {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-  animation: burst 2.6s var(--tv-ease) both;
-}
 .endOverlay {
   position: absolute;
   inset: 0;
@@ -651,25 +642,9 @@
     transform: rotate(360deg);
   }
 }
-@keyframes burst {
-  0% {
-    opacity: 0;
-    transform: scale(0.6);
-  }
-  15%,
-  75% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.15) translateY(-40px);
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   .live i,
-  .spin,
-  .burst {
+  .spin {
     animation: none;
   }
 }

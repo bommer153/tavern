@@ -358,6 +358,8 @@ export interface Gift {
   name: string;
   coinCost: number;
   imageUrl: string;
+  /** Optional full-screen effect: animated WebP/GIF/APNG, or WebM/MP4 video. */
+  animation?: string;
   category: string;
   rarity: GiftRarity;
   active: boolean;

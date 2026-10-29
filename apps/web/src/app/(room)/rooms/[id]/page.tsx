@@ -1,6 +1,6 @@
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { type CosmeticCollection, DEFAULT_BACKGROUND, type RoomMember } from '@tavern/shared';
+import { type CosmeticCollection, DEFAULT_BACKGROUND, type GiftRarity, type RoomMember } from '@tavern/shared';
 import { ConnectionState, Room, RoomEvent, Track } from 'livekit-client';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
@@ -9,6 +9,7 @@ import { RoomBackdrop } from '@/components/cosmetics/backdrops';
 import { SEAT_STATE_LABEL, SeatFrame, type SeatState } from '@/components/cosmetics/frames';
 import { useCosmetics } from '@/components/cosmetics/use-cosmetics';
 import { GiftPicker } from '@/components/domain';
+import { playGiftEffect } from '@/components/gift-effect';
 import { Icon, type IconName } from '@/components/icon';
 import { ReportModal } from '@/components/report';
 import { Tavern3DScene } from '@/components/three/stage';
@@ -18,7 +19,7 @@ import { RequireRole, useSession } from '@/lib/session';
 import s from './room.module.css';
 
 type ChatMsg = { id: string; sender: { displayName?: string }; body: string };
-type GiftEvent = { transactionId: string; gift: { imageUrl: string; name: string }; quantity: number; sender: { displayName?: string }; recipient: { displayName?: string } };
+type GiftEvent = { transactionId: string; gift: { imageUrl: string; name: string; animation?: string; rarity: GiftRarity }; quantity: number; sender: { displayName?: string }; recipient: { displayName?: string } };
 type Voice = 'off' | 'connecting' | 'connected' | 'reconnecting' | 'unavailable' | 'failed';
 type Sheet = 'chat' | 'people' | 'view' | 'rules' | null;
 
@@ -154,6 +155,8 @@ function RoomView() {
       refresh();
     };
     const onGift = (g: GiftEvent) => {
+      // Everyone in the room, sender included, sees the full-screen effect from this one event.
+      playGiftEffect({ id: g.transactionId, image: g.gift.imageUrl, animation: g.gift.animation, rarity: g.gift.rarity, quantity: g.quantity });
       setBurst(g);
       setTimeout(() => setBurst((b) => (b?.transactionId === g.transactionId ? null : b)), 2600);
     };
@@ -431,12 +434,6 @@ function RoomView() {
           <span>Leave</span>
         </button>
       </nav>
-
-      {burst && (
-        <div className={s.burst} aria-live="polite">
-          <GiftGlyph image={burst.gift.imageUrl} size={120} />
-        </div>
-      )}
 
       {endedMsg && (
         <div className={s.endOverlay} role="dialog" aria-modal aria-labelledby="ended">
