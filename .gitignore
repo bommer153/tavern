@@ -7,7 +7,7 @@ dist
 .env.local
 *.log
 .data
-uploads
+/apps/api/uploads/
 coverage
 apps/mobile/android
 apps/mobile/ios
