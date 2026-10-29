@@ -21,7 +21,7 @@ services:
       - key: WEB_URL
         value: https://tavern-web.onrender.com
       - key: API_PUBLIC_URL
-        value: https://tavern-api.onrender.com
+        value: https://tavern-api-68z5.onrender.com
       - key: COOKIE_SECURE
         value: "true"
       - key: PAYMENT_PROVIDER
@@ -45,7 +45,7 @@ services:
       - key: NODE_VERSION
         value: "24"
       - key: API_ORIGIN
-        value: https://tavern-api.onrender.com
+        value: https://tavern-api-68z5.onrender.com
       # Same origin as the page: Next forwards these to API_ORIGIN (see apps/web/next.config.ts).
       - key: NEXT_PUBLIC_API_URL
         value: https://tavern-web.onrender.com/api/v1
