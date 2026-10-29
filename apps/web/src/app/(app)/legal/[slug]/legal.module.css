@@ -1,0 +1,33 @@
+/* Legal — a calm reading layout with numbered clauses. */
+.doc {
+  max-width: 760px;
+  margin: 0 auto;
+}
+.title {
+  margin-top: 6px;
+  font-size: var(--tv-fs-3xl);
+}
+.sections {
+  display: grid;
+  gap: var(--tv-s6);
+  margin-top: var(--tv-s7);
+}
+.section {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: var(--tv-s3);
+}
+.num {
+  font-family: var(--tv-mono);
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-violet-hi);
+  padding-top: 3px;
+}
+.h {
+  font-size: var(--tv-fs-lg);
+}
+.body {
+  margin-top: 4px;
+  line-height: 1.7;
+  color: var(--tv-ink-2);
+}

@@ -1,0 +1,675 @@
+/*
+ * Immersive voice room: one screen, never scrolls. Rows: header · stage (flexes) · seats · activity · dock.
+ * Flexible rows use minmax(0, …) / min-height: 0 so content shrinks instead of overflowing.
+ */
+.room {
+  position: fixed;
+  inset: 0;
+  height: 100dvh;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto auto auto;
+  grid-template-areas: 'head' 'stage' 'seats' 'activity' 'dock';
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  color: var(--tv-ink);
+  background: var(--tv-void);
+  isolation: isolate;
+  overscroll-behavior: none;
+}
+.room > * {
+  min-width: 0;
+  min-height: 0;
+}
+
+/* ---------- Header ---------- */
+.head {
+  grid-area: head;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tv-s2);
+  padding: var(--tv-s2) var(--tv-s3) 0;
+}
+.glassBtn {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  background: rgb(10 8 32 / 0.55);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgb(255 255 255 / 0.08);
+}
+.ident {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+.game {
+  font-size: var(--tv-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--tv-tracking-label);
+  text-transform: uppercase;
+  color: var(--tv-violet-hi);
+}
+.title {
+  overflow: hidden;
+  font-size: clamp(1rem, 4.4vw, 1.375rem);
+  font-weight: 800;
+  letter-spacing: var(--tv-tracking-tight);
+  line-height: 1.2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-shadow: 0 2px 12px rgb(0 0 0 / 0.6);
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: var(--tv-fs-xs);
+}
+.live,
+.count,
+.vchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: rgb(10 8 32 / 0.6);
+  backdrop-filter: blur(6px);
+  font-weight: 650;
+}
+.live {
+  color: #fff;
+  background: #e11d48;
+  letter-spacing: 0.06em;
+}
+.live i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+.count {
+  height: 32px;
+  margin: -4px 0;
+  color: var(--tv-ink);
+  cursor: pointer;
+}
+.count:focus-visible {
+  box-shadow: var(--tv-focus-ring);
+}
+.cap {
+  color: var(--tv-ink-3);
+}
+.vchip {
+  color: var(--tv-ink-2);
+}
+.v-connected {
+  color: var(--tv-cyan);
+}
+.v-reconnecting,
+.v-connecting {
+  color: var(--tv-amber);
+}
+.v-failed,
+.v-off {
+  color: var(--tv-red);
+}
+
+/* ---------- Stage ---------- */
+.stage {
+  grid-area: stage;
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: var(--tv-s2) var(--tv-s3);
+}
+.feature {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+}
+.orb {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  z-index: -1;
+  translate: -50% -21%;
+  pointer-events: none;
+}
+.featName {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--tv-s2);
+  max-width: 80vw;
+  font-size: clamp(0.95rem, 2.4dvh, 1.2rem);
+  font-weight: 750;
+  text-shadow: 0 2px 10px rgb(0 0 0 / 0.7);
+}
+.featState {
+  min-height: 1.2em;
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-ink-2);
+  text-transform: capitalize;
+}
+.role {
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: var(--tv-fs-2xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tv-violet-hi);
+  background: var(--tv-violet-wash);
+}
+.roleHost {
+  color: var(--tv-gold);
+  background: var(--tv-gold-wash);
+}
+.emptyStage {
+  color: var(--tv-ink-2);
+}
+
+/* Notices float over the stage so they never change the layout. */
+.toasts {
+  position: absolute;
+  top: var(--tv-s2);
+  left: var(--tv-s3);
+  right: var(--tv-s3);
+  z-index: 3;
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 520px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: var(--tv-fs-xs);
+  background: rgb(23 20 58 / 0.88);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--tv-line-2);
+}
+.toast button {
+  display: grid;
+  place-items: center;
+  min-width: 28px;
+  min-height: 28px;
+  margin: -6px -6px -6px auto;
+  color: var(--tv-ink-2);
+}
+.toastWarn {
+  border-color: rgb(248 113 113 / 0.5);
+}
+
+/* ---------- Seats ---------- */
+.seats {
+  grid-area: seats;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: 6px;
+  justify-items: center;
+  padding: var(--tv-s2) var(--tv-s3) 0;
+}
+.seat {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  width: 100%;
+  min-width: 0;
+  padding: 2px 0;
+  border-radius: 12px;
+  color: inherit;
+  cursor: pointer;
+}
+.seat:focus-visible {
+  box-shadow: var(--tv-focus-ring);
+}
+.seatName {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: var(--tv-fs-2xs);
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 6px rgb(0 0 0 / 0.8);
+}
+.hand {
+  position: absolute;
+  top: 0;
+  right: 6%;
+  color: var(--tv-amber);
+}
+.more > span:first-child {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-weight: 750;
+  background: rgb(23 20 58 / 0.8);
+  border: 1px dashed var(--tv-line-hi);
+}
+
+/* ---------- Activity ---------- */
+.activity {
+  grid-area: activity;
+  display: flex;
+  align-items: center;
+  margin: var(--tv-s2) var(--tv-s3) 0;
+  padding: 0 12px;
+  height: 34px;
+  overflow: hidden;
+  border-radius: 999px;
+  font-size: var(--tv-fs-xs);
+  text-align: left;
+  color: var(--tv-ink-2);
+  background: rgb(10 8 32 / 0.55);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgb(255 255 255 / 0.06);
+}
+.activity > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.activity b {
+  color: var(--tv-ink);
+}
+.actGift {
+  color: var(--tv-pink);
+}
+.muted {
+  color: var(--tv-ink-3);
+}
+
+/* ---------- Dock: always visible ---------- */
+.dock {
+  grid-area: dock;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: var(--tv-s3);
+}
+.primary {
+  flex: 1;
+  max-width: 220px;
+}
+.mic,
+.leave {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 52px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: var(--tv-fs-sm);
+  transition: transform var(--tv-fast) var(--tv-ease), background var(--tv-fast);
+}
+.mic {
+  flex: 1;
+  max-width: 180px;
+  color: var(--tv-ink);
+  background: var(--tv-plate-2);
+  border: 1px solid var(--tv-line-2);
+}
+.micOn {
+  color: #fff;
+  background: var(--tv-violet);
+  border-color: var(--tv-violet-hi);
+  box-shadow: var(--tv-glow-violet);
+}
+.micBlocked {
+  color: var(--tv-red);
+  border-color: rgb(248 113 113 / 0.5);
+}
+.mic:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.dockBtn {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  color: var(--tv-ink);
+  background: rgb(23 20 58 / 0.8);
+  border: 1px solid var(--tv-line-2);
+  backdrop-filter: blur(8px);
+  transition: transform var(--tv-fast) var(--tv-ease), background var(--tv-fast);
+}
+.dockOn {
+  color: var(--tv-amber);
+  border-color: rgb(251 191 36 / 0.5);
+}
+.dockBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--tv-pink);
+  border: 2px solid var(--tv-bg);
+}
+/* Leave: red, squared-off pill with a label so it never reads as another round control. */
+.leave {
+  flex-shrink: 0;
+  border-radius: 14px;
+  padding: 0 14px;
+  color: #fff;
+  background: #b91c1c;
+  border: 1px solid #f87171;
+}
+.mic:active:not(:disabled),
+.dockBtn:active:not(:disabled),
+.leave:active {
+  transform: scale(0.94);
+}
+@media (hover: hover) {
+  .dockBtn:hover:not(:disabled) {
+    background: var(--tv-plate-3);
+  }
+  .leave:hover {
+    background: #dc2626;
+  }
+}
+.mic:focus-visible,
+.dockBtn:focus-visible,
+.leave:focus-visible {
+  box-shadow: var(--tv-focus-ring);
+}
+
+/* ---------- Overlays ---------- */
+.burst {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  animation: burst 2.6s var(--tv-ease) both;
+}
+.endOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  padding: var(--tv-s4);
+  background: rgb(6 5 26 / 0.7);
+  backdrop-filter: blur(6px);
+}
+.endCard {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: var(--tv-s3);
+  max-width: 360px;
+  margin: auto;
+  padding: var(--tv-s6);
+  text-align: center;
+  grid-row: 1 / -1;
+}
+.endTitle {
+  font-size: var(--tv-fs-lg);
+  font-weight: 700;
+}
+.loading {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: auto;
+  grid-row: 1 / -1;
+  color: var(--tv-ink-2);
+}
+.spin {
+  animation: spin 0.9s linear infinite;
+}
+
+.chat {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: var(--tv-s3);
+  height: min(60dvh, 520px);
+}
+.chatLog {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+}
+.chatLog b {
+  color: var(--tv-ink);
+  margin-right: 4px;
+}
+.chatForm {
+  display: flex;
+  gap: var(--tv-s2);
+}
+.chatErr {
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-red);
+}
+.people,
+.view {
+  display: grid;
+  gap: var(--tv-s5);
+}
+.view section {
+  display: grid;
+  gap: var(--tv-s3);
+}
+.group {
+  margin-bottom: var(--tv-s2);
+  font-size: var(--tv-fs-2xs);
+  font-weight: 700;
+  letter-spacing: var(--tv-tracking-label);
+  text-transform: uppercase;
+  color: var(--tv-ink-3);
+}
+.person {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s3);
+  padding: 6px 0;
+}
+.personText {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+}
+.personText b {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.personText span {
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-ink-3);
+  text-transform: capitalize;
+}
+.rules {
+  white-space: pre-wrap;
+  color: var(--tv-ink-2);
+}
+.range {
+  display: grid;
+  gap: 6px;
+  font-size: var(--tv-fs-sm);
+}
+.range input {
+  accent-color: var(--tv-violet);
+  min-height: 32px;
+}
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-violet-hi);
+}
+.themes {
+  display: flex;
+  gap: var(--tv-s2);
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scroll-snap-type: x mandatory;
+}
+.theme {
+  display: grid;
+  gap: 4px;
+  flex: 0 0 96px;
+  scroll-snap-align: start;
+  font-size: var(--tv-fs-2xs);
+  font-weight: 600;
+  color: var(--tv-ink-2);
+  text-align: left;
+}
+.thumb {
+  position: relative;
+  display: block;
+  height: 120px;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 2px solid transparent;
+}
+.theme[aria-checked='true'] {
+  color: var(--tv-ink);
+}
+.theme[aria-checked='true'] .thumb {
+  border-color: var(--tv-violet-hi);
+  box-shadow: var(--tv-glow-violet);
+}
+.theme[aria-checked='true'] > span:last-child::before {
+  content: '✓ ';
+  color: var(--tv-violet-hi);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--tv-s2);
+}
+
+/* ---------- Adaptation ---------- */
+/* Short phones: tighter chrome, no activity strip (chat stays one tap away in the dock). */
+@media (max-height: 620px) {
+  .activity {
+    display: none;
+  }
+  .meta {
+    margin-top: 2px;
+  }
+  .dock {
+    padding-top: var(--tv-s2);
+  }
+  .mic,
+  .leave {
+    height: 46px;
+  }
+}
+@media (max-width: 379px) {
+  .leave span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .leave {
+    width: 46px;
+    padding: 0;
+  }
+  .dock {
+    gap: 4px;
+  }
+  .dockBtn {
+    width: 44px;
+    height: 44px;
+  }
+}
+/* Short landscape: stage left, seats right, dock along the bottom. */
+.landscape {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  grid-template-areas: 'head head' 'stage seats' 'stage activity' 'dock dock';
+}
+.landscape .seats {
+  align-content: center;
+}
+.landscape .head {
+  padding-top: var(--tv-s1);
+}
+.landscape .dock {
+  padding-top: var(--tv-s1);
+  padding-bottom: var(--tv-s2);
+}
+.landscape .mic,
+.landscape .leave {
+  height: 44px;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes burst {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  15%,
+  75% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.15) translateY(-40px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live i,
+  .spin,
+  .burst {
+    animation: none;
+  }
+}

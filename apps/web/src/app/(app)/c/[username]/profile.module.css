@@ -1,0 +1,358 @@
+/* Companion profile — a character page: tall banner, glowing portrait, stats, loadout, services. */
+
+.hero {
+  --c: 24px;
+  --plate-fill: var(--tv-plate);
+  --plate-edge: var(--tv-line-hi);
+  box-shadow: 0 30px 80px -44px var(--tv-violet);
+}
+.banner {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+.banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, var(--tv-plate), transparent 70%),
+    radial-gradient(ellipse at 70% 20%, rgb(255 255 255 / 0.16), transparent 55%);
+}
+@media (min-width: 640px) {
+  .banner {
+    height: 280px;
+  }
+}
+.identity > :first-child {
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--tv-violet), 0 0 40px -4px var(--tv-violet);
+}
+.identity {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--tv-s4) var(--tv-s5);
+  margin-top: -64px;
+  padding: 0 var(--tv-s6) var(--tv-s6);
+}
+.who {
+  flex: 1;
+  min-width: 220px;
+}
+.name {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s2);
+  font-size: var(--tv-fs-2xl);
+}
+.verified {
+  color: var(--tv-violet-hi);
+}
+.handle {
+  margin-top: 2px;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+}
+.presence {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: var(--tv-s2);
+}
+.readouts {
+  display: flex;
+  gap: var(--tv-s6);
+  margin-top: var(--tv-s3);
+}
+.readout {
+  display: grid;
+  padding-right: var(--tv-s6);
+  border-right: 1px solid var(--tv-line);
+}
+.readout:last-child {
+  border-right: 0;
+}
+.readout strong {
+  font-size: var(--tv-fs-lg);
+  font-variant-numeric: tabular-nums;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tv-s2);
+}
+@media (max-width: 639px) {
+  .identity {
+    padding: 0 var(--tv-s4) var(--tv-s5);
+  }
+  .actions > * {
+    flex: 1 1 auto;
+  }
+}
+
+.cols {
+  display: grid;
+  gap: var(--tv-s6);
+  margin-top: var(--tv-s6);
+  align-items: start;
+}
+@media (min-width: 1100px) {
+  .cols {
+    grid-template-columns: minmax(0, 1fr) 340px;
+  }
+}
+
+.bio {
+  white-space: pre-line;
+  color: var(--tv-ink-2);
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--tv-s4);
+}
+
+/* Loadout: one line per game */
+.loadout {
+  display: grid;
+  gap: 2px;
+  margin-top: var(--tv-s5);
+}
+.slot {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s3);
+  padding: var(--tv-s3);
+  background: var(--tv-bg-2);
+}
+.slotText {
+  min-width: 0;
+}
+.rank {
+  font-family: var(--tv-mono);
+  font-size: var(--tv-fs-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tv-gold);
+}
+.roles {
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+}
+
+/* Services as contracts */
+.contracts {
+  display: grid;
+  gap: var(--tv-s3);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+}
+.contract {
+  --c: var(--tv-cut);
+  --plate-fill: var(--tv-plate);
+  position: relative;
+  width: 100%;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--tv-med), box-shadow var(--tv-med), transform var(--tv-fast) var(--tv-ease);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tv-s3);
+  padding: var(--tv-s5);
+}
+.contractHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--tv-s3);
+}
+.contractTitle {
+  font-weight: 650;
+}
+.cost {
+  font-family: var(--tv-mono);
+  font-size: var(--tv-fs-lg);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.terms {
+  display: grid;
+  gap: 4px;
+  font-size: var(--tv-fs-sm);
+}
+.terms li {
+  display: flex;
+  gap: var(--tv-s2);
+}
+.yes {
+  color: var(--tv-mint);
+}
+.no {
+  color: var(--tv-red);
+}
+
+/* Reviews */
+.review {
+  padding: var(--tv-s4);
+  background: var(--tv-bg-2);
+}
+.reviewHead {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s3);
+}
+.rating {
+  display: inline-flex;
+  gap: 1px;
+  color: var(--tv-gold);
+}
+.rating .off {
+  color: var(--tv-line-2);
+}
+.comment {
+  margin-top: var(--tv-s2);
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+}
+
+/* Availability: a week of time windows */
+.safety {
+  display: flex;
+  gap: var(--tv-s4);
+  margin-top: var(--tv-s3);
+}
+.safety button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-ink-2);
+}
+.safety button:hover {
+  color: var(--tv-ink);
+}
+.safety .danger:hover {
+  color: var(--tv-red);
+}
+
+/* Booking */
+
+/* ---------- One order flow: the order bar ---------- */
+article.contract {
+  cursor: default;
+}
+/* Sticky above the mobile dock so the order action is always within thumb reach. */
+.orderBar {
+  position: sticky;
+  bottom: calc(var(--tv-dock-h) + var(--tv-s3) + env(safe-area-inset-bottom));
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tv-s3) var(--tv-s4);
+  margin-top: var(--tv-s4);
+  padding: var(--tv-s3) var(--tv-s4);
+  --plate-fill: rgb(17 18 40 / 0.94);
+  --plate-edge: rgb(217 70 239 / 0.55);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--tv-shadow-2), 0 0 30px -12px var(--tv-magenta);
+}
+@media (min-width: 860px) {
+  .orderBar {
+    bottom: var(--tv-s4);
+  }
+}
+.orderInfo {
+  flex: 1;
+  min-width: 160px;
+  display: grid;
+  gap: 4px;
+}
+.orderTitle {
+  font-weight: 700;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+}
+.stepper button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--tv-ink);
+  background: var(--tv-plate-2);
+  border: 1px solid var(--tv-line-2);
+}
+.stepper button:disabled {
+  opacity: 0.4;
+}
+.stepper button:focus-visible {
+  box-shadow: var(--tv-focus-ring);
+}
+.orderPrice {
+  display: grid;
+  justify-items: end;
+  font-family: var(--tv-display);
+  font-size: var(--tv-fs-xl);
+  font-weight: 700;
+}
+.orderPrice small {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--tv-font);
+  font-size: var(--tv-fs-xs);
+  font-weight: 500;
+  color: var(--tv-gold);
+}
+.orderBtn {
+  min-width: 180px;
+}
+.orderNote {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+}
+.confirm {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tv-s3);
+  font-size: var(--tv-fs-sm);
+}
+.confirmBtns {
+  display: flex;
+  gap: var(--tv-s2);
+}
+.confirming {
+  --plate-edge: var(--tv-magenta);
+}
+.orderBar > [role='alert'] {
+  flex-basis: 100%;
+}
+@media (max-width: 520px) {
+  .orderBtn,
+  .confirmBtns,
+  .confirmBtns > :last-child {
+    flex: 1;
+  }
+}

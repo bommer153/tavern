@@ -1,0 +1,39 @@
+/* The 3D layer occupies the right half of its host, so objects stay near the camera axis
+   (no wide-angle stretching), fewer pixels are drawn, and text on the left stays readable. */
+.stage {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 50%;
+  max-width: 460px;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 35%);
+  mask-image: linear-gradient(90deg, transparent, #000 35%);
+}
+.full {
+  width: 100%;
+  max-width: none;
+  inset: 0;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+/* Static backdrop: visible while the scene loads, and permanently without WebGL. */
+.fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(ellipse at 55% 50%, rgb(124 77 255 / 0.25), transparent 65%),
+    radial-gradient(ellipse at 80% 100%, rgb(34 211 238 / 0.13), transparent 55%);
+}
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity var(--tv-slow) var(--tv-ease);
+}
+.ready {
+  opacity: 1;
+}

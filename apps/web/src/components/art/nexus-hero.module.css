@@ -1,0 +1,71 @@
+/* --px/--py: pointer (-1…1), --sy: hero position in the viewport (-1…1); each layer moves by its --d depth. */
+.art {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform: translate3d(calc(var(--px, 0) * var(--d) * 16px), calc(var(--py, 0) * var(--d) * 10px + var(--sy, 0) * var(--d) * -70px), 0);
+  transition: transform 160ms linear;
+  will-change: transform;
+}
+.front {
+  filter: blur(3px);
+}
+.ring,
+.ringRev {
+  transform-origin: 300px 320px;
+  animation: turn 60s linear infinite;
+}
+.ringRev {
+  animation-duration: 24s;
+  animation-direction: reverse;
+}
+.trails {
+  animation: drift 6s ease-in-out infinite alternate;
+}
+.shards {
+  animation: float 5s ease-in-out infinite alternate;
+}
+.visor,
+.twinkle {
+  animation: shimmer 4s ease-in-out infinite;
+}
+.pulse {
+  animation: shimmer 2.4s ease-in-out infinite;
+}
+@keyframes turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes drift {
+  to {
+    transform: translate(10px, -8px);
+  }
+}
+@keyframes float {
+  to {
+    transform: translateY(-12px);
+  }
+}
+@keyframes shimmer {
+  50% {
+    opacity: 0.4;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .layer {
+    transform: none;
+    transition: none;
+  }
+  .art * {
+    animation: none !important;
+  }
+}

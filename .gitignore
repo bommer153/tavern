@@ -1,0 +1,16 @@
+node_modules
+dist
+.next
+.turbo
+.expo
+.env
+.env.local
+*.log
+.data
+uploads
+coverage
+apps/mobile/android
+apps/mobile/ios
+test-results
+playwright-report
+.env*.local

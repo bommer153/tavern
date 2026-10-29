@@ -1,0 +1,26 @@
+# Local services for development. Usage: docker compose -f infrastructure/docker/docker-compose.yml up -d
+# Then use MONGODB_URI=mongodb://127.0.0.1:27018/tavern?replicaSet=rs0&directConnection=true
+services:
+  mongo:
+    image: mongo:8.0
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27018"]
+    ports: ["27018:27018"]
+    volumes: [mongo-data:/data/db]
+    healthcheck:
+      # Initiates the single-node replica set on first boot (transactions require a replica set).
+      test: ["CMD", "mongosh", "--port", "27018", "--quiet", "--eval", "try { rs.status().ok } catch (e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'127.0.0.1:27018'}]}).ok }"]
+      interval: 5s
+      retries: 30
+
+  livekit:
+    image: livekit/livekit-server:v1.9
+    # --dev uses API key "devkey" / secret "secret". Never use dev mode in production.
+    command: ["--dev", "--bind", "0.0.0.0"]
+    ports: ["7880:7880", "7881:7881", "7882:7882/udp"]
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    ports: ["1025:1025", "8025:8025"]
+
+volumes:
+  mongo-data:

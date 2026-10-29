@@ -1,0 +1,503 @@
+/* People, rooms, gifts — each shaped for what it is, not one generic card. */
+
+/* ---------- Character card (companion) ---------- */
+.plaque {
+  --c: var(--tv-cut-lg);
+  --plate-fill: var(--tv-bg-2);
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--tv-med) var(--tv-ease), border-color var(--tv-med), box-shadow var(--tv-med);
+}
+.plaque:hover,
+.plaque:focus-within {
+  --plate-edge: var(--tv-magenta);
+  --hud: var(--tv-magenta);
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -22px var(--tv-violet), var(--tv-glow-magenta);
+}
+/* HUD corner brackets, like a character-select slot. Dim at rest, magenta on hover/focus. */
+.plaque::after {
+  --hud: rgb(167 139 250 / 0.45);
+  content: '';
+  position: absolute;
+  inset: 6px;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--hud), var(--hud)) top left / 14px 2px no-repeat,
+    linear-gradient(var(--hud), var(--hud)) top left / 2px 14px no-repeat,
+    linear-gradient(var(--hud), var(--hud)) top right / 14px 2px no-repeat,
+    linear-gradient(var(--hud), var(--hud)) top right / 2px 14px no-repeat,
+    linear-gradient(var(--hud), var(--hud)) bottom left / 14px 2px no-repeat,
+    linear-gradient(var(--hud), var(--hud)) bottom left / 2px 14px no-repeat,
+    linear-gradient(var(--hud), var(--hud)) bottom right / 14px 2px no-repeat,
+    linear-gradient(var(--hud), var(--hud)) bottom right / 2px 14px no-repeat;
+}
+.plaque:hover::after,
+.plaque:focus-within::after {
+  --hud: var(--tv-magenta);
+}
+.plaqueLink {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.plaqueLink:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--tv-violet-hi);
+}
+/* Portrait: the character over their main game's colours, name plate fading out of it. */
+.portrait {
+  position: relative;
+  aspect-ratio: 1 / 1.05;
+  overflow: hidden;
+}
+.portrait::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgb(255 255 255 / 0.18), transparent 60%);
+}
+.portrait::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, var(--tv-bg-2) 4%, rgb(17 15 44 / 0.75) 30%, transparent 58%);
+}
+.portraitImg {
+  position: absolute;
+  inset: 6% 6% 0;
+  width: 88%;
+  height: 94%;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+  transition: transform var(--tv-slow) var(--tv-ease);
+}
+.plaque:hover .portraitImg {
+  transform: scale(1.05);
+}
+.presence {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgb(6 5 26 / 0.65);
+  backdrop-filter: blur(6px);
+  border-radius: 999px;
+}
+.presence i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tv-mint);
+  box-shadow: 0 0 6px var(--tv-mint);
+}
+.presenceBusy i {
+  background: var(--tv-amber);
+  box-shadow: 0 0 6px var(--tv-amber);
+}
+.nameplate {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: grid;
+  gap: 2px;
+  padding: 0 var(--tv-s3) var(--tv-s2);
+}
+.name {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  font-size: var(--tv-fs-md);
+  text-shadow: 0 1px 8px rgb(0 0 0 / 0.6);
+}
+.name > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.verified {
+  color: var(--tv-violet-hi);
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px var(--tv-s2);
+  font-size: var(--tv-fs-xs);
+}
+/* In narrow cards the price drops to its own line instead of splitting the rating mid-number. */
+.meta > * {
+  white-space: nowrap;
+}
+.meta > span:first-child {
+  font-size: var(--tv-fs-xs);
+}
+.price {
+  margin-left: auto;
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-ink-2);
+  white-space: nowrap;
+}
+.price b {
+  font-weight: 650;
+  color: var(--tv-ink);
+}
+.headline {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.8em;
+  margin: var(--tv-s1) var(--tv-s3) 0;
+  font-size: var(--tv-fs-xs);
+  line-height: 1.4;
+  color: var(--tv-ink-2);
+}
+.loadout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding: var(--tv-s3);
+  min-width: 0;
+}
+.rank,
+.tag {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 2px 8px;
+  font-size: var(--tv-fs-2xs);
+  font-weight: 600;
+  border-radius: 6px;
+}
+.rank {
+  flex-shrink: 0;
+  max-width: 55%;
+  color: var(--tv-gold);
+  background: var(--tv-gold-wash);
+}
+.tag {
+  color: var(--tv-ink-2);
+  background: rgb(255 255 255 / 0.07);
+}
+.voice {
+  margin-left: auto;
+  color: var(--tv-ink-3);
+}
+/* Follow: a round glass toggle on the portrait */
+.followHex {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  color: #fff;
+  background: rgb(6 5 26 / 0.55);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 50%;
+  transition: transform var(--tv-fast) var(--tv-ease-spring), background var(--tv-fast);
+}
+.followHex:hover {
+  background: var(--tv-violet);
+}
+.followHex:active {
+  transform: scale(0.88);
+}
+.followHex[aria-pressed='true'] {
+  color: var(--tv-pink);
+}
+.followHex:focus-visible {
+  box-shadow: var(--tv-focus-ring);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: var(--tv-s4);
+}
+@media (max-width: 459px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--tv-s3);
+  }
+  .tag {
+    display: none;
+  }
+}
+
+/* ---------- Stage tile (voice room) ---------- */
+.stage {
+  --c: var(--tv-cut-lg);
+  --plate-fill: var(--tv-bg-2);
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--tv-med) var(--tv-ease), border-color var(--tv-med), box-shadow var(--tv-med);
+}
+.stage:hover {
+  --plate-edge: rgb(34 211 238 / 0.45);
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -22px var(--tv-cyan);
+}
+.stage:focus-visible {
+  box-shadow: none;
+  --plate-edge: var(--tv-violet-hi);
+}
+.stageArt {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--tv-s3);
+  min-height: 150px;
+  padding: var(--tv-s3);
+  background-size: cover;
+  background-position: center;
+}
+.stageArt::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, rgb(6 5 26 / 0.9), rgb(6 5 26 / 0.05) 70%),
+    radial-gradient(circle at 80% 15%, rgb(255 255 255 / 0.18), transparent 50%);
+}
+.stageArt > * {
+  position: relative;
+}
+.stageLogo {
+  position: absolute;
+  right: 10%;
+  top: 22%;
+  width: 34%;
+  max-height: 44%;
+  object-fit: contain;
+  opacity: 0.35;
+  transform: rotate(-8deg);
+  transition: opacity var(--tv-med), transform var(--tv-slow) var(--tv-ease);
+}
+.stage:hover .stageLogo {
+  opacity: 0.55;
+  transform: rotate(-4deg) scale(1.06);
+}
+.stageTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+}
+.stageTitle {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: var(--tv-fs-md);
+  font-weight: 700;
+  line-height: 1.25;
+  color: #fff;
+}
+.stageSub {
+  margin-top: 2px;
+  font-size: var(--tv-fs-xs);
+  color: rgb(255 255 255 / 0.7);
+}
+.stageFoot {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s2);
+  padding: var(--tv-s3);
+  font-size: var(--tv-fs-sm);
+}
+.join {
+  flex-shrink: 0;
+  padding: 4px 12px;
+  font-size: var(--tv-fs-xs);
+  font-weight: 650;
+  color: #fff;
+  background: var(--tv-violet);
+  border-radius: 8px;
+  box-shadow: var(--tv-glow-violet);
+}
+.host {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--tv-ink-2);
+}
+.speakers {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--tv-mono);
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-cyan);
+}
+/* Seat meter: up to eight hexes, filled in proportion to how full the room is. */
+.seats {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.seat {
+  width: 7px;
+  height: 8px;
+  clip-path: var(--tv-hex);
+  background: var(--tv-line-2);
+}
+.seatOn {
+  background: var(--tv-violet-hi);
+}
+.seatsLabel {
+  margin-left: 4px;
+  font-family: var(--tv-mono);
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-ink-3);
+}
+
+/* ---------- Gift picker ---------- */
+.giftGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: var(--tv-s2);
+}
+.giftToken {
+  --c: 10px;
+  --plate-fill: var(--tv-bg-2);
+  --rarity: var(--tv-line-2);
+  --plate-edge: var(--rarity);
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: var(--tv-s3) var(--tv-s2);
+  text-align: center;
+  transition: transform var(--tv-fast) var(--tv-ease);
+}
+.giftToken:hover {
+  transform: translateY(-2px);
+}
+.giftToken[aria-pressed='true'] {
+  --plate-fill: var(--tv-violet-wash);
+  --plate-edge: var(--tv-violet);
+}
+.giftToken:focus-visible {
+  box-shadow: none;
+  --plate-edge: var(--tv-violet-hi);
+}
+.rare {
+  --rarity: rgb(34 211 238 / 0.45);
+}
+.epic {
+  --rarity: rgb(167 139 250 / 0.6);
+}
+.legendary {
+  --rarity: rgb(245 199 106 / 0.7);
+}
+.giftName {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--tv-fs-xs);
+  font-weight: 550;
+}
+.cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--tv-mono);
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-gold);
+}
+.giftFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tv-s3);
+  margin-top: var(--tv-s5);
+  padding-top: var(--tv-s4);
+  border-top: 1px solid var(--tv-line);
+}
+.ledger {
+  display: grid;
+  gap: 2px;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+}
+.ledger b {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--tv-gold);
+}
+.qty {
+  width: auto;
+  min-height: 40px;
+}
+.sendRow {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s2);
+}
+.fine {
+  margin-top: var(--tv-s3);
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-ink-3);
+}
+.reveal {
+  --c: var(--tv-cut);
+  --plate-fill: var(--tv-bg-2);
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 150px;
+  margin-bottom: var(--tv-s4);
+  padding: 0 var(--tv-s5);
+  overflow: hidden;
+  animation: tv-rise var(--tv-slow) var(--tv-ease) both;
+}
+.revealText {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s3);
+}
+.revealTitle {
+  font-weight: 650;
+}
+.burst {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.burst > span {
+  animation: tv-pop 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+.timer {
+  font-family: var(--tv-mono);
+  font-variant-numeric: tabular-nums;
+}

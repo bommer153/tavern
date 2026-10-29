@@ -1,0 +1,801 @@
+/* Tavern core controls. Focus rings are drawn inset so they stay visible inside clipped plates. */
+
+/* ---------- Button ---------- */
+.btn {
+  --c: 8px;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tv-s2);
+  height: 40px;
+  padding: 0 18px;
+  font-size: var(--tv-fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  user-select: none;
+  border-radius: var(--c);
+  transition: transform var(--tv-fast) var(--tv-ease), filter var(--tv-fast) var(--tv-ease), background var(--tv-med) var(--tv-ease);
+}
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  opacity: 0.5;
+}
+.btn:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--tv-violet-hi);
+}
+.sm {
+  --c: 6px;
+  height: 32px;
+  padding: 0 12px;
+}
+.lg {
+  --c: 11px;
+  height: 48px;
+  padding: 0 26px;
+  font-size: var(--tv-fs-md);
+}
+/* Primary actions speak in the display face: confident, uppercase, one per view. */
+.primary {
+  color: var(--tv-ink-on-accent);
+  font-family: var(--tv-display);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #a98bff 0%, var(--tv-violet) 45%, var(--tv-violet-lo) 100%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.28), var(--tv-glow-violet);
+}
+.primary:hover:not(:disabled) {
+  filter: brightness(1.1);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.28), var(--tv-glow-violet), var(--tv-glow-magenta);
+}
+/* Edge drawn by the element, fill by ::before — the chamfers keep their outline. */
+.secondary {
+  color: var(--tv-ink);
+  background: var(--tv-line-2);
+}
+.secondary::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  background: var(--tv-plate-2);
+  border-radius: inherit;
+  transition: background var(--tv-med) var(--tv-ease);
+}
+.secondary:hover:not(:disabled)::before {
+  background: var(--tv-plate-3);
+}
+.ghost {
+  color: var(--tv-ink-2);
+}
+.ghost:hover:not(:disabled) {
+  color: var(--tv-ink);
+  background: var(--tv-plate);
+}
+.danger {
+  color: var(--tv-red);
+  background: var(--tv-red-wash);
+}
+.danger:hover:not(:disabled) {
+  background: rgb(248 113 113 / 0.22);
+}
+.gold {
+  color: #1a1305;
+  background: linear-gradient(180deg, #ffe0a0, var(--tv-gold));
+}
+.spin {
+  animation: tv-spin 0.8s linear infinite;
+}
+
+/* ---------- Icon button (square, hex hover well) ---------- */
+.iconBtn {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--tv-ink-2);
+  transition: color var(--tv-fast);
+}
+.iconBtn::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  clip-path: var(--tv-hex);
+  background: var(--tv-plate);
+  opacity: 0;
+  transition: opacity var(--tv-fast);
+}
+.iconBtn:hover {
+  color: var(--tv-ink);
+}
+.iconBtn:hover::before,
+.iconBtn[aria-expanded='true']::before {
+  opacity: 1;
+}
+.iconBtn > * {
+  position: relative;
+}
+.iconDot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 8px;
+  height: 8px;
+  clip-path: var(--tv-hex);
+  background: var(--tv-pink);
+}
+
+/* ---------- Fields ---------- */
+.field {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  background: var(--tv-glass);
+  color: var(--tv-ink);
+  font-size: var(--tv-fs-sm);
+  box-shadow: inset 0 0 0 1px var(--tv-line);
+  /* Only the bottom-right corner is notched: reads as Tavern without fighting text. */
+  border-radius: var(--tv-cut);
+  transition: box-shadow var(--tv-fast), background var(--tv-fast);
+}
+.field::placeholder {
+  color: var(--tv-ink-3);
+}
+.field:hover:not(:disabled) {
+  box-shadow: inset 0 0 0 1px var(--tv-line-2);
+}
+.field:focus,
+.field:focus-visible {
+  background: var(--tv-plate);
+  box-shadow: inset 0 0 0 1px var(--tv-violet), inset 0 -2px 0 var(--tv-violet);
+}
+.field:disabled {
+  opacity: 0.55;
+}
+.field[aria-invalid='true'] {
+  box-shadow: inset 0 0 0 1px var(--tv-red);
+}
+textarea.field {
+  min-height: 96px;
+  padding-block: 10px;
+  resize: vertical;
+}
+select.field {
+  appearance: none;
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a5aec0' stroke-width='1.75' stroke-linecap='square'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+select.field option {
+  background: var(--tv-plate);
+}
+.fieldWrap {
+  display: grid;
+  gap: 6px;
+}
+.fieldLabel {
+  font-size: var(--tv-fs-sm);
+  font-weight: 550;
+}
+.fieldHint {
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-ink-3);
+}
+.fieldError {
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-red);
+}
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--tv-fs-sm);
+  cursor: pointer;
+}
+.check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--tv-violet);
+}
+
+/* Search: field with a leading lens */
+.search {
+  position: relative;
+  display: block;
+  flex: 1;
+  min-width: 0;
+}
+.search > svg {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--tv-ink-3);
+  pointer-events: none;
+  z-index: 1;
+}
+.search .field {
+  padding-left: 40px;
+}
+
+/* ---------- Panel ---------- */
+.panel {
+  padding: var(--tv-s5);
+}
+.panelTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s2);
+  margin-bottom: var(--tv-s3);
+  font-size: var(--tv-fs-md);
+  font-weight: 600;
+}
+
+/* ---------- Tags (status / meta) — parallelogram, never a pill ---------- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 10px;
+  font-size: var(--tv-fs-xs);
+  font-weight: 550;
+  white-space: nowrap;
+  border-radius: 999px;
+  color: var(--tv-ink-2);
+  background: var(--tv-plate-2);
+}
+.tone-violet {
+  color: var(--tv-violet-hi);
+  background: var(--tv-violet-wash);
+}
+.tone-cyan {
+  color: var(--tv-cyan);
+  background: var(--tv-cyan-wash);
+}
+.tone-pink {
+  color: var(--tv-pink);
+  background: var(--tv-pink-wash);
+}
+.tone-gold {
+  color: var(--tv-gold);
+  background: var(--tv-gold-wash);
+}
+.tone-mint {
+  color: var(--tv-mint);
+  background: var(--tv-mint-wash);
+}
+.tone-amber {
+  color: var(--tv-amber);
+  background: var(--tv-amber-wash);
+}
+.tone-red {
+  color: var(--tv-red);
+  background: var(--tv-red-wash);
+}
+
+/* LIVE marker: a diamond that pulses only while something is genuinely live */
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--tv-mono);
+  font-size: var(--tv-fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--tv-tracking-label);
+  color: var(--tv-cyan);
+}
+.liveDot {
+  width: 7px;
+  height: 7px;
+  background: var(--tv-cyan);
+  transform: rotate(45deg);
+  animation: tv-live 1.8s ease-out infinite;
+}
+.liveOnArt {
+  padding: 3px 9px 3px 8px;
+  font-family: var(--tv-font);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: #f43f5e;
+  border-radius: 999px;
+  box-shadow: 0 0 14px -2px rgb(244 63 94 / 0.8);
+}
+.liveOnArt .liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  animation: none;
+}
+
+/* ---------- Avatar — hexagonal identity ---------- */
+.avatar {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.avatarFace {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  clip-path: var(--tv-hex);
+  object-fit: cover;
+  font-weight: 700;
+  color: var(--tv-bg);
+}
+.avatarRing {
+  padding: 2px;
+  clip-path: var(--tv-hex);
+}
+.pip {
+  position: absolute;
+  right: -1px;
+  bottom: 2%;
+  clip-path: var(--tv-hex);
+  background: var(--tv-bg);
+  display: grid;
+  place-items: center;
+}
+.pip > span {
+  width: 64%;
+  height: 64%;
+  clip-path: var(--tv-hex);
+}
+.pip-online > span {
+  background: var(--tv-mint);
+}
+.pip-busy > span {
+  background: var(--tv-amber);
+}
+.pip-offline > span {
+  background: var(--tv-ink-3);
+}
+
+/* ---------- Skeleton ---------- */
+.skeleton {
+  --c: var(--tv-cut-sm);
+  border-radius: var(--c);
+  background: linear-gradient(100deg, var(--tv-plate) 30%, var(--tv-plate-2) 50%, var(--tv-plate) 70%);
+  background-size: 300% 100%;
+  animation: tv-shimmer 1.6s linear infinite;
+}
+
+/* ---------- Empty and error states ---------- */
+.empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--tv-s2);
+  padding: var(--tv-s8) var(--tv-s6);
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgb(124 77 255 / 0.08), transparent 60%),
+    repeating-linear-gradient(90deg, transparent 0 47px, rgb(255 255 255 / 0.025) 47px 48px),
+    var(--tv-bg-2);
+}
+.emptyArt {
+  margin-bottom: var(--tv-s2);
+  color: var(--tv-violet-hi);
+}
+.emptyTitle {
+  font-size: var(--tv-fs-md);
+  font-weight: 600;
+}
+.emptyBody {
+  max-width: 36ch;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+}
+.emptyAction {
+  margin-top: var(--tv-s3);
+}
+.error {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s3);
+  padding: 10px 12px 10px 14px;
+  color: var(--tv-red);
+  background: linear-gradient(90deg, var(--tv-red) 0 3px, var(--tv-red-wash) 3px);
+  font-size: var(--tv-fs-sm);
+}
+.error p {
+  flex: 1;
+}
+.errorRetry {
+  flex-shrink: 0;
+  padding: 4px 12px;
+  font-weight: 600;
+  color: var(--tv-red);
+  background: rgb(248 113 113 / 0.16);
+  border-radius: 999px;
+}
+.errorRetry:hover {
+  background: rgb(248 113 113 / 0.26);
+}
+
+/* ---------- Dialog / drawer ---------- */
+.dialog {
+  --c: var(--tv-cut-lg);
+  margin: auto;
+  width: calc(100% - 2rem);
+  max-width: 460px;
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+}
+.dialog[open] {
+  animation: tv-sheet var(--tv-med) var(--tv-ease) both;
+}
+.dialog::backdrop {
+  background: rgb(6 5 26 / 0.72);
+  backdrop-filter: blur(6px);
+}
+.dialogWide {
+  max-width: 680px;
+}
+.dialogBody {
+  --plate-fill: var(--tv-plate);
+  --plate-edge: var(--tv-line-2);
+  max-height: inherit;
+  overflow-y: auto;
+  padding: var(--tv-s6);
+}
+.dialogHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tv-s4);
+  margin-bottom: var(--tv-s5);
+}
+.dialogTitle {
+  font-size: var(--tv-fs-lg);
+  font-weight: 650;
+}
+.handle {
+  display: none;
+}
+@media (max-width: 639px) {
+  /* Phones get a bottom drawer: docked, full width, thumb-reachable. */
+  .dialog {
+    margin: auto 0 0;
+    width: 100%;
+    max-width: none;
+    max-height: 92dvh;
+  }
+  .dialogBody {
+    --c: 0px;
+    padding: var(--tv-s4) var(--tv-s4) max(var(--tv-s5), env(safe-area-inset-bottom));
+  }
+  .handle {
+    display: block;
+    width: 44px;
+    height: 4px;
+    margin: 0 auto var(--tv-s3);
+    background: var(--tv-line-2);
+  }
+}
+
+/* ---------- Tabs — scanner bar ---------- */
+.tabs {
+  display: flex;
+  gap: var(--tv-s1);
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--tv-line);
+}
+.tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 10px 14px 12px;
+  font-family: var(--tv-mono);
+  font-size: var(--tv-fs-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tv-ink-3);
+  transition: color var(--tv-fast);
+}
+.tab:hover {
+  color: var(--tv-ink);
+}
+.tab[aria-selected='true'],
+.tab[aria-current='page'] {
+  color: var(--tv-ink);
+}
+.tab[aria-selected='true']::after,
+.tab[aria-current='page']::after {
+  content: '';
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: -1px;
+  height: 2px;
+  background: var(--tv-violet);
+}
+.tab[aria-selected='true']::before,
+.tab[aria-current='page']::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 7px;
+  height: 7px;
+  background: var(--tv-violet);
+  transform: translateX(-50%) rotate(45deg);
+}
+.tab:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--tv-violet-hi);
+}
+.count {
+  min-width: 18px;
+  padding: 0 5px;
+  font-family: var(--tv-font);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  color: var(--tv-bg);
+  background: var(--tv-pink);
+  border-radius: 999px;
+}
+
+/* ---------- Page and section heads ---------- */
+.pageHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--tv-s4);
+  margin-bottom: var(--tv-s6);
+}
+.pageTitle {
+  font-size: var(--tv-fs-2xl);
+}
+.pageSub {
+  margin-top: 4px;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+}
+.section {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s3);
+  margin-bottom: var(--tv-s3);
+}
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s2);
+  font-size: var(--tv-fs-lg);
+  font-weight: 700;
+  white-space: nowrap;
+}
+/* Spacer that pushes "See all" to the right */
+.sectionRule {
+  flex: 1;
+}
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+  white-space: nowrap;
+}
+.more:hover {
+  color: var(--tv-ink);
+}
+
+/* ---------- Rails (horizontal swipe rows) ---------- */
+.rail {
+  display: flex;
+  gap: var(--tv-s3);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  margin-inline: calc(var(--tv-gutter) * -1);
+  padding: 2px var(--tv-gutter) 6px;
+}
+.rail::-webkit-scrollbar {
+  display: none;
+}
+.rail > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+/* ---------- Game token ---------- */
+.gameToken {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  clip-path: var(--tv-hex);
+  font-family: var(--tv-mono);
+  font-weight: 500;
+  color: #fff;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+}
+.gameLogo {
+  width: 64%;
+  height: 64%;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.45));
+}
+
+/* ---------- Rating ---------- */
+.stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--tv-fs-sm);
+}
+.stars svg {
+  color: var(--tv-gold);
+}
+.starsCount {
+  color: var(--tv-ink-3);
+}
+
+/* ---------- Tooltip (hover and keyboard focus) ---------- */
+.tip {
+  position: relative;
+  display: inline-flex;
+}
+.tip > [role='tooltip'] {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 8px);
+  z-index: 50;
+  padding: 5px 9px;
+  font-size: var(--tv-fs-xs);
+  white-space: nowrap;
+  color: var(--tv-ink);
+  background: var(--tv-plate-3);
+  border-radius: 8px;
+  opacity: 0;
+  transform: translate(-50%, -3px);
+  pointer-events: none;
+  transition: opacity var(--tv-fast), transform var(--tv-fast);
+}
+.tip:hover > [role='tooltip'],
+.tip:focus-within > [role='tooltip'] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------- Menu (dropdown) ---------- */
+.menuWrap {
+  position: relative;
+}
+.menu {
+  --plate-fill: var(--tv-plate);
+  --plate-edge: var(--tv-line-2);
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 60;
+  min-width: 220px;
+  padding: 6px;
+  filter: drop-shadow(var(--tv-shadow-2));
+  animation: tv-rise var(--tv-fast) var(--tv-ease) both;
+}
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  font-size: var(--tv-fs-sm);
+  text-align: left;
+  color: var(--tv-ink);
+}
+.menuItem:hover,
+.menuItem:focus-visible {
+  background: var(--tv-plate-2);
+  box-shadow: inset 2px 0 0 var(--tv-violet);
+}
+.menuItem svg {
+  color: var(--tv-ink-3);
+}
+.menuDanger {
+  color: var(--tv-red);
+}
+.menuDanger svg {
+  color: var(--tv-red);
+}
+.menuSep {
+  height: 1px;
+  margin: 6px 4px;
+  background: var(--tv-line);
+}
+
+/* ---------- Switch — parallelogram track, hex knob ---------- */
+.switchRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tv-s4);
+  padding: 8px 0;
+  font-size: var(--tv-fs-sm);
+  cursor: pointer;
+}
+.switch {
+  appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 22px;
+  margin: 0;
+  background: var(--tv-line-2);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--tv-med) var(--tv-ease);
+}
+.switch::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 7px;
+  width: 15px;
+  height: 16px;
+  background: var(--tv-ink-2);
+  clip-path: var(--tv-hex);
+  transition: transform var(--tv-med) var(--tv-ease-spring), background var(--tv-med);
+}
+.switch:checked {
+  background: var(--tv-violet);
+}
+.switch:checked::before {
+  transform: translateX(16px);
+  background: #fff;
+}
+.switch:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--tv-violet-hi);
+}
+
+/* ---------- Chip — a parallelogram toggle for multi-select ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+  background: var(--tv-bg-2);
+  box-shadow: inset 0 0 0 1px var(--tv-line);
+  border-radius: 999px;
+  transition: color var(--tv-fast), background var(--tv-fast), box-shadow var(--tv-fast);
+}
+.chip:hover {
+  color: var(--tv-ink);
+}
+.chip[aria-pressed='true'] {
+  color: var(--tv-ink);
+  background: var(--tv-violet-wash);
+  box-shadow: inset 0 0 0 1px var(--tv-violet);
+}
+.chip:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--tv-violet-hi);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}

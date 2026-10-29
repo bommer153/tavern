@@ -1,0 +1,123 @@
+/* Order detail — a session ticket. */
+
+.ticket {
+  --c: var(--tv-cut-lg);
+  padding: var(--tv-s6);
+}
+@media (max-width: 639px) {
+  .ticket {
+    padding: var(--tv-s4);
+  }
+}
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--tv-s3);
+}
+.title {
+  margin-top: 4px;
+  font-size: var(--tv-fs-2xl);
+}
+.sub {
+  margin-top: 4px;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+}
+/* Live session clock — cyan because the session is happening now */
+.clock {
+  --c: var(--tv-cut);
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s4);
+  margin-top: var(--tv-s5);
+  padding: var(--tv-s4) var(--tv-s5);
+  color: var(--tv-cyan);
+  background: linear-gradient(90deg, var(--tv-cyan) 0 3px, var(--tv-cyan-wash) 3px);
+}
+.digits {
+  font-size: 2.25rem;
+  line-height: 1;
+  color: var(--tv-ink);
+}
+.waiting {
+  margin-top: var(--tv-s5);
+  padding: var(--tv-s3) var(--tv-s4);
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-amber);
+  background: linear-gradient(90deg, var(--tv-amber) 0 3px, var(--tv-amber-wash) 3px);
+}
+.facts {
+  margin-top: var(--tv-s5);
+}
+.factValue {
+  font-size: var(--tv-fs-sm);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tv-s2);
+  margin-top: var(--tv-s5);
+}
+.party {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s3);
+  margin: var(--tv-s2) 0 var(--tv-s4);
+}
+.link {
+  font-size: var(--tv-fs-sm);
+  text-align: center;
+  color: var(--tv-violet-hi);
+}
+.link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.receipt {
+  display: grid;
+  gap: 6px;
+  font-size: var(--tv-fs-sm);
+}
+.line {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--tv-s3);
+}
+.line span:first-child {
+  color: var(--tv-ink-2);
+}
+.line span:last-child {
+  font-family: var(--tv-mono);
+}
+.strong {
+  font-weight: 650;
+}
+.rule {
+  height: 1px;
+  margin: 6px 0;
+  background: linear-gradient(90deg, var(--tv-line-2) 50%, transparent 0) 0 0 / 8px 1px repeat-x;
+}
+.caution {
+  display: flex;
+  gap: var(--tv-s2);
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-ink-3);
+}
+/* Star rating input: hexes would confuse; stars are the universal rating sign */
+.rate {
+  display: flex;
+  gap: 4px;
+  margin: var(--tv-s3) 0;
+}
+.rate button {
+  color: var(--tv-line-2);
+  transition: color var(--tv-fast), transform var(--tv-fast) var(--tv-ease-spring);
+}
+.rate button:hover {
+  transform: scale(1.12);
+}
+.rate .on {
+  color: var(--tv-gold);
+}

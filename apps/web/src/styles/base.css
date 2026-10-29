@@ -1,0 +1,224 @@
+/* Tavern base layer: reset, typography, focus, shape primitives and motion. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  scrollbar-color: var(--tv-line-2) transparent;
+}
+body {
+  min-height: 100dvh;
+  background: var(--tv-bg);
+  color: var(--tv-ink);
+  font-family: var(--tv-font);
+  font-size: var(--tv-fs-md);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+h1,
+h2,
+h3,
+h4,
+p {
+  overflow-wrap: anywhere;
+}
+h1,
+h2,
+h3 {
+  line-height: 1.15;
+  letter-spacing: var(--tv-tracking-tight);
+  font-weight: 650;
+}
+h1 {
+  font-family: var(--tv-display);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+}
+dialog {
+  color: inherit;
+}
+::selection {
+  background: rgb(124 77 255 / 0.45);
+}
+
+/* One focus treatment everywhere: a violet ring offset from the surface. */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  box-shadow: var(--tv-focus-ring);
+  outline: 2px solid transparent; /* keeps a ring in forced-colors mode */
+}
+
+.tv-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Small uppercase mono label — Tavern's "HUD" voice for eyebrows, stats and meta. */
+.tv-label {
+  font-family: var(--tv-mono);
+  font-size: var(--tv-fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--tv-tracking-label);
+  text-transform: uppercase;
+  color: var(--tv-ink-3);
+}
+
+/* ---------- Shape primitives ---------- */
+
+/* Rounded silhouette. */
+.tv-cut {
+  --c: var(--tv-cut);
+  border-radius: var(--c);
+}
+
+/*
+ * Plate: a rounded surface with a 1px edge. Hover states retint the edge through --plate-edge.
+ * It clips its children, so art bands and images follow the corners.
+ */
+.tv-plate {
+  --c: var(--tv-cut);
+  --plate-fill: var(--tv-plate);
+  --plate-edge: var(--tv-line);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--plate-edge);
+  border-radius: var(--c);
+  background: linear-gradient(180deg, var(--tv-glint), transparent 40%), var(--plate-fill);
+  transition: border-color var(--tv-med) var(--tv-ease);
+}
+
+/* Glass: a frosted panel for content laid over art. */
+.tv-glass {
+  border: 1px solid var(--tv-line);
+  border-radius: var(--tv-cut);
+  background: var(--tv-glass);
+  backdrop-filter: blur(12px);
+}
+
+/* Round mask — avatars, presence pips, coin tokens. */
+.tv-hex {
+  clip-path: var(--tv-hex);
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes tv-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+@keyframes tv-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes tv-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes tv-sheet {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+@keyframes tv-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes tv-live {
+  0% {
+    box-shadow: 0 0 0 0 rgb(34 211 238 / 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 7px rgb(34 211 238 / 0);
+  }
+}
+@keyframes tv-pop {
+  0% {
+    transform: scale(0.3) translateY(20px);
+    opacity: 0;
+  }
+  40% {
+    transform: scale(1.12) translateY(-6px);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(-40px);
+    opacity: 0;
+  }
+}
+
+.tv-rise {
+  animation: tv-rise var(--tv-slow) var(--tv-ease) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

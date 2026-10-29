@@ -1,0 +1,128 @@
+/* Wallet — the coin vault. Money UI stays plain and exact; the identity lives in the frame. */
+
+.vault {
+  --c: var(--tv-cut-lg);
+  --plate-fill: var(--tv-bg-2);
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s5);
+  padding: var(--tv-s6);
+  overflow: hidden;
+}
+.vault::after {
+  content: '';
+  position: absolute;
+  right: -40px;
+  top: -60px;
+  width: 260px;
+  height: 260px;
+  clip-path: var(--tv-hex);
+  background: radial-gradient(circle, rgb(245 199 106 / 0.18), transparent 65%);
+  z-index: -1;
+}
+.coinMark {
+  color: var(--tv-gold);
+  filter: drop-shadow(0 6px 18px rgb(245 199 106 / 0.35));
+}
+.balance {
+  font-family: var(--tv-mono);
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--tv-gold);
+}
+.status {
+  margin-bottom: var(--tv-s5);
+  padding: 10px 14px;
+  font-size: var(--tv-fs-sm);
+}
+.paid {
+  color: var(--tv-mint);
+  background: linear-gradient(90deg, var(--tv-mint) 0 3px, var(--tv-mint-wash) 3px);
+}
+.pending {
+  color: var(--tv-amber);
+  background: linear-gradient(90deg, var(--tv-amber) 0 3px, var(--tv-amber-wash) 3px);
+}
+
+.packs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: var(--tv-s3);
+  margin-top: var(--tv-s3);
+}
+.pack {
+  --c: var(--tv-cut);
+  display: grid;
+  gap: var(--tv-s2);
+  padding: var(--tv-s5);
+}
+.pack:hover {
+  --plate-edge: rgb(245 199 106 / 0.45);
+}
+.packTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tv-s2);
+}
+.amount {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--tv-mono);
+  font-size: var(--tv-fs-xl);
+}
+.amount svg {
+  color: var(--tv-gold);
+}
+.buy {
+  margin-top: var(--tv-s2);
+}
+
+.txIcon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 38px;
+  flex-shrink: 0;
+  clip-path: var(--tv-hex);
+  color: var(--tv-ink-2);
+  background: var(--tv-plate-2);
+}
+.credit {
+  color: var(--tv-mint);
+}
+.figure {
+  text-align: right;
+}
+
+/* Sandbox checkout */
+.sandbox {
+  --c: var(--tv-cut-lg);
+  max-width: 460px;
+  margin: 0 auto;
+  padding: var(--tv-s6);
+  text-align: center;
+}
+.sandboxMark {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 58px;
+  margin: 0 auto var(--tv-s3);
+  clip-path: var(--tv-hex);
+  color: var(--tv-amber);
+  background: var(--tv-amber-wash);
+}
+.exchange {
+  margin-top: var(--tv-s5);
+  font-family: var(--tv-mono);
+  font-size: var(--tv-fs-xl);
+}
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--tv-s2);
+  margin-top: var(--tv-s5);
+}

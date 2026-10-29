@@ -1,0 +1,21 @@
+{
+  "name": "tavern",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "turbo run dev --filter=@tavern/api --filter=@tavern/web",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "db:start": "node infrastructure/scripts/mongo-rs.mjs",
+    "db:seed": "pnpm --filter @tavern/api seed",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "mongodb": "^7.0.0",
+    "prettier": "^3.6.2",
+    "turbo": "^2.11.10",
+    "typescript": "~5.9.3"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "name": "@tavern/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "nest build",
+    "dev": "node ../../infrastructure/scripts/mongo-rs.mjs --detach && nest start --watch",
+    "start": "node dist/main.js",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "seed": "nest build && node dist/seed.js"
+  },
+  "dependencies": {
+    "@nestjs/common": "^12.3.2",
+    "@nestjs/core": "^12.3.2",
+    "@nestjs/jwt": "^12.0.3",
+    "@nestjs/mongoose": "^12.0.0",
+    "@nestjs/platform-express": "^12.3.2",
+    "@nestjs/platform-socket.io": "^12.3.2",
+    "@nestjs/swagger": "^12.0.5",
+    "@nestjs/throttler": "^6.7.1",
+    "@nestjs/websockets": "^12.3.2",
+    "@tavern/shared": "workspace:^",
+    "cookie-parser": "^1.4.7",
+    "livekit-server-sdk": "^2.19.2",
+    "mongoose": "^9.11.4",
+    "nodemailer": "^10.2.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "socket.io": "^4.8.4",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^12.0.11",
+    "@nestjs/testing": "^12.3.2",
+    "@swc/core": "^1.16.20",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/express": "^5.0.6",
+    "@types/multer": "^2.3.0",
+    "@types/node": "^26.6.5",
+    "@types/nodemailer": "^8.0.2",
+    "@types/supertest": "^7.2.1",
+    "mongodb-memory-server": "^11.3.0",
+    "supertest": "^7.3.1",
+    "unplugin-swc": "^2.0.0",
+    "vitest": "^5.0.5"
+  },
+  "type": "module"
+}

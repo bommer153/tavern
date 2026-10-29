@@ -1,0 +1,208 @@
+/* Messaging: two panes on desktop, one at a time on phones. Calm by design — nothing competes with reading. */
+
+.frame {
+  display: grid;
+  height: calc(100dvh - var(--tv-bar-h) - var(--tv-dock-h) - env(safe-area-inset-bottom));
+  min-height: 420px;
+  /* Bleed to the edges, but keep main's bottom padding so the composer can always scroll clear of the dock
+     (e.g. when the verify-email banner adds height above). */
+  margin: calc(var(--tv-s5) * -1) calc(var(--tv-gutter) * -1) 0;
+  background: var(--tv-bg-2);
+}
+@media (min-width: 860px) {
+  .frame {
+    --c: var(--tv-cut-lg);
+    height: calc(100dvh - var(--tv-bar-h) - var(--tv-s5) - var(--tv-s8));
+    margin: 0;
+    border-radius: var(--c);
+    box-shadow: inset 0 0 0 1px var(--tv-line);
+  }
+}
+@media (min-width: 1100px) {
+  .frame {
+    grid-template-columns: 330px minmax(0, 1fr);
+  }
+  .list {
+    border-right: 1px solid var(--tv-line);
+  }
+}
+.list,
+.thread {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+@media (max-width: 1099px) {
+  .hideNarrow {
+    display: none;
+  }
+}
+.listHead {
+  padding: var(--tv-s4);
+  border-bottom: 1px solid var(--tv-line);
+  font-size: var(--tv-fs-lg);
+  font-weight: 650;
+}
+.scroll {
+  flex: 1;
+  overflow-y: auto;
+}
+.conv {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s3);
+  padding: var(--tv-s3) var(--tv-s4);
+  transition: background var(--tv-fast);
+}
+.conv:hover {
+  background: var(--tv-plate);
+}
+.conv[aria-current='page'] {
+  background: var(--tv-plate);
+  box-shadow: inset 3px 0 0 var(--tv-violet);
+}
+.conv:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--tv-violet-hi);
+}
+.convMain {
+  flex: 1;
+  min-width: 0;
+}
+.convMain p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.convName {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s2);
+  font-weight: 600;
+}
+.preview {
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+}
+.unreadText {
+  color: var(--tv-ink);
+  font-weight: 550;
+}
+.side {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+}
+.time {
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-ink-3);
+  white-space: nowrap;
+}
+.count {
+  min-width: 18px;
+  padding: 0 5px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  color: var(--tv-bg);
+  background: var(--tv-pink);
+  border-radius: 999px;
+}
+.pick {
+  margin: auto;
+  display: grid;
+  justify-items: center;
+  gap: var(--tv-s2);
+  color: var(--tv-ink-2);
+  font-size: var(--tv-fs-sm);
+}
+
+/* Thread */
+.threadHead {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s3);
+  padding: var(--tv-s3) var(--tv-s4);
+  border-bottom: 1px solid var(--tv-line);
+}
+.back {
+  display: inline-grid;
+}
+@media (min-width: 1100px) {
+  .back {
+    display: none;
+  }
+}
+.who {
+  min-width: 0;
+}
+.who a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.typing {
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-cyan);
+}
+.handle {
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-ink-3);
+}
+.orderLink {
+  margin-left: auto;
+}
+.log {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  padding: var(--tv-s4);
+}
+.msg {
+  display: flex;
+  animation: tv-rise var(--tv-med) var(--tv-ease) both;
+}
+.mine {
+  justify-content: flex-end;
+}
+/* Bubbles notch the corner nearest their sender */
+.bubble {
+  max-width: min(80%, 560px);
+  padding: 8px 12px;
+  font-size: var(--tv-fs-sm);
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: var(--tv-plate-2);
+  border-radius: 16px 16px 16px 4px;
+}
+.mine .bubble {
+  color: #fff;
+  background: linear-gradient(180deg, #8f66ff, var(--tv-violet-lo));
+  border-radius: var(--tv-cut);
+}
+.sending {
+  opacity: 0.6;
+}
+.stamp {
+  margin-top: 2px;
+  font-size: 10px;
+  color: var(--tv-ink-3);
+}
+.mine .stamp {
+  color: rgb(255 255 255 / 0.7);
+}
+.retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #fff;
+  text-decoration: underline;
+}
+.composer {
+  display: flex;
+  gap: var(--tv-s2);
+  padding: var(--tv-s3);
+  border-top: 1px solid var(--tv-line);
+}

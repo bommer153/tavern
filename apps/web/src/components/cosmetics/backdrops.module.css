@@ -1,0 +1,159 @@
+.bd {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--tv-void);
+}
+.art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.fx {
+  position: absolute;
+  inset: 0;
+}
+/* Legibility: dims the art (intensity) and darkens the top and bottom bands where text and controls sit. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgb(6 5 26 / 0.75), transparent 22%, transparent 62%, rgb(6 5 26 / 0.85)),
+    rgb(6 5 26 / var(--scrim, 0.4));
+}
+
+/* ---------- Theme skies (the SVG draws the scene on top) ---------- */
+.t-hearth {
+  background:
+    radial-gradient(ellipse at 50% 30%, #2a1a5e, transparent 70%),
+    linear-gradient(#0b0a22, #140f33);
+}
+.t-studio {
+  background: linear-gradient(#0f0e22, #07061a);
+}
+.t-cyber-grid {
+  background: linear-gradient(#050a1f, #0a1238 58%, #050a1f);
+}
+.t-dream {
+  background:
+    radial-gradient(circle at 20% 20%, rgb(244 114 182 / 0.35), transparent 45%),
+    radial-gradient(circle at 80% 30%, rgb(124 77 255 / 0.45), transparent 50%),
+    linear-gradient(#1a0f3d, #2b1660 60%, #120d2e);
+}
+.t-nebula {
+  background:
+    radial-gradient(circle at 62% 40%, rgb(244 114 182 / 0.35), transparent 40%),
+    radial-gradient(circle at 35% 55%, rgb(124 77 255 / 0.45), transparent 45%),
+    radial-gradient(circle at 72% 72%, rgb(34 211 238 / 0.18), transparent 40%),
+    #04031a;
+}
+.t-grove {
+  background:
+    radial-gradient(ellipse at 50% 100%, rgb(52 211 153 / 0.22), transparent 60%),
+    linear-gradient(#071a1f, #0d1f2a 60%, #160f30);
+}
+.t-sakura-dusk {
+  background: linear-gradient(#1b1446, #4a2a6e 45%, #b0628f 80%, #e89ab0);
+}
+.t-neon-city {
+  background:
+    radial-gradient(ellipse at 50% 100%, rgb(244 114 182 / 0.3), transparent 60%),
+    linear-gradient(#070417, #1a0b3a 60%, #2a0f4a);
+}
+.t-arcade {
+  background: linear-gradient(#12051f, #2d0b46 50%, #12051f 60%);
+}
+.t-arena {
+  background:
+    radial-gradient(ellipse at 50% 88%, rgb(124 77 255 / 0.35), transparent 50%),
+    linear-gradient(#05040f, #0e0a26);
+}
+.t-winter-lights {
+  background: linear-gradient(#030b1c, #0b1d3a 60%, #14213f);
+}
+
+/* Arena light beams sweep only when motion is on. */
+.beam {
+  position: absolute;
+  top: -10%;
+  width: 60%;
+  height: 120%;
+  background: conic-gradient(from 168deg at 50% 0%, transparent, rgb(196 181 253 / 0.22) 6deg, transparent 14deg);
+  transform-origin: 50% 0;
+}
+.beamL {
+  left: -12%;
+  transform: rotate(-14deg);
+}
+.beamR {
+  right: -12%;
+  transform: rotate(14deg) scaleX(-1);
+}
+.live .beamL {
+  animation: sweepL 9s ease-in-out infinite alternate;
+}
+.live .beamR {
+  animation: sweepR 11s ease-in-out infinite alternate;
+}
+@keyframes sweepL {
+  to {
+    transform: rotate(10deg);
+  }
+}
+@keyframes sweepR {
+  to {
+    transform: rotate(-10deg) scaleX(-1);
+  }
+}
+
+.aurora {
+  position: absolute;
+  left: -20%;
+  width: 140%;
+  height: 34%;
+  filter: blur(28px);
+  opacity: 0.55;
+  border-radius: 50%;
+}
+.a1 {
+  top: 8%;
+  background: linear-gradient(90deg, transparent, #34d399, #22d3ee, transparent);
+  transform: skewY(-6deg);
+}
+.a2 {
+  top: 20%;
+  background: linear-gradient(90deg, transparent, #a78bfa, #22d3ee, transparent);
+  transform: skewY(5deg);
+  opacity: 0.4;
+}
+.live .a1 {
+  animation: aurora 14s ease-in-out infinite alternate;
+}
+.live .a2 {
+  animation: aurora 18s ease-in-out infinite alternate-reverse;
+}
+@keyframes aurora {
+  to {
+    translate: 12% 4%;
+  }
+}
+
+.neon {
+  filter: drop-shadow(0 0 8px rgb(255 255 255 / 0.45));
+}
+.live .neon {
+  animation: neon 5s steps(1) infinite;
+}
+@keyframes neon {
+  92% {
+    opacity: 1;
+  }
+  94% {
+    opacity: 0.4;
+  }
+  96% {
+    opacity: 1;
+  }
+}

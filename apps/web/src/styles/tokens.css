@@ -1,0 +1,123 @@
+/*
+ * Tavern design tokens — "Anime Nexus": indigo-black night, electric violet identity, magenta neon edges
+ * and cyan used sparingly for live/HUD readouts.
+ * Mobile mirrors the colour values in apps/mobile/src/theme.ts.
+ *
+ * Breakpoints (media queries can't read custom properties, so these are documented values):
+ *   --bp-sm 640px   phones → large phones
+ *   --bp-md 860px   bottom dock → top command bar
+ *   --bp-lg 1100px  single column → split layouts
+ *   --bp-xl 1440px  roomy desktop
+ */
+:root {
+  color-scheme: dark;
+
+  /* Background layers, back to front */
+  --tv-void: #05050e;
+  --tv-bg: #0a0a18;
+  --tv-bg-2: #111228;
+  --tv-plate: #181a33;
+  --tv-plate-2: #20213f;
+  --tv-plate-3: #2a2a52;
+
+  /* Lines */
+  --tv-line: #24264a;
+  --tv-line-2: #34356a;
+  --tv-line-hi: rgb(217 70 239 / 0.55);
+  --tv-glint: rgb(255 255 255 / 0.05);
+  /* Frosted panel laid over art (hero, scenes) */
+  --tv-glass: rgb(20 18 48 / 0.62);
+
+  /* Text */
+  --tv-ink: #f8fafc;
+  --tv-ink-2: #a9b0c6;
+  --tv-ink-3: #7a82a3;
+  --tv-ink-on-accent: #ffffff;
+
+  /* Accents — each has one job */
+  --tv-violet: #8b5cf6; /* brand, primary action, selection */
+  --tv-violet-hi: #a78bfa;
+  --tv-violet-lo: #6d28d9;
+  --tv-magenta: #d946ef; /* neon edges: hover, selection frames, HUD corners */
+  --tv-cyan: #22d3ee; /* live right now (rooms, speaking) */
+  --tv-pink: #f472b6; /* gifts and affection */
+  --tv-gold: #f5c76a; /* coins, premium, ranks */
+  --tv-mint: #34d399; /* online presence, success */
+  --tv-amber: #fbbf24; /* busy, pending */
+  --tv-red: #fb7185; /* errors, destructive */
+
+  /* Tints for fills behind accent text */
+  --tv-violet-wash: rgb(124 77 255 / 0.16);
+  --tv-cyan-wash: rgb(34 211 238 / 0.12);
+  --tv-pink-wash: rgb(244 114 182 / 0.13);
+  --tv-gold-wash: rgb(245 199 106 / 0.12);
+  --tv-mint-wash: rgb(52 211 153 / 0.12);
+  --tv-amber-wash: rgb(251 191 36 / 0.12);
+  --tv-red-wash: rgb(248 113 113 / 0.12);
+
+  /* Typography */
+  --tv-font: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --tv-mono: var(--font-geist-mono), ui-monospace, 'SFMono-Regular', monospace;
+  --tv-script: var(--font-script), 'Brush Script MT', cursive;
+  --tv-display: var(--font-display), var(--tv-font);
+  --tv-fs-2xs: 0.6875rem;
+  --tv-fs-xs: 0.75rem;
+  --tv-fs-sm: 0.875rem;
+  --tv-fs-md: 1rem;
+  --tv-fs-lg: 1.125rem;
+  --tv-fs-xl: 1.375rem;
+  --tv-fs-2xl: 1.75rem;
+  --tv-fs-3xl: clamp(2rem, 4vw, 3rem);
+  --tv-tracking-tight: -0.02em;
+  --tv-tracking-label: 0.12em;
+
+  /* Spacing — 4px rhythm */
+  --tv-s1: 4px;
+  --tv-s2: 8px;
+  --tv-s3: 12px;
+  --tv-s4: 16px;
+  --tv-s5: 20px;
+  --tv-s6: 24px;
+  --tv-s7: 32px;
+  --tv-s8: 48px;
+  --tv-gutter: 16px;
+  --tv-page-max: 1320px;
+
+  /* Shape — corner radii (the names predate the switch from chamfers to rounded corners) */
+  --tv-cut-sm: 8px;
+  --tv-cut: 12px;
+  --tv-cut-lg: 20px;
+  --tv-hex: circle(50%); /* avatars, pips, tokens: round */
+
+  /* Elevation */
+  --tv-shadow-1: 0 10px 24px -14px rgb(0 0 0 / 0.75);
+  --tv-shadow-2: 0 24px 48px -20px rgb(0 0 0 / 0.85);
+  --tv-glow-violet: 0 10px 30px -12px rgb(139 92 246 / 0.8);
+  --tv-glow-magenta: 0 0 0 1px rgb(217 70 239 / 0.7), 0 0 24px -6px rgb(217 70 239 / 0.6);
+
+  /* Focus and interaction */
+  --tv-focus-ring: 0 0 0 2px var(--tv-bg), 0 0 0 4px var(--tv-violet-hi);
+  --tv-hover-lift: translateY(-2px);
+
+  /* Motion */
+  --tv-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --tv-ease-spring: cubic-bezier(0.3, 1.4, 0.4, 1);
+  --tv-fast: 120ms;
+  --tv-med: 220ms;
+  --tv-slow: 420ms;
+
+  /* Chrome sizes */
+  --tv-bar-h: 64px;
+  --tv-dock-h: 64px;
+}
+
+@media (max-width: 859px) {
+  :root {
+    --tv-bar-h: 56px;
+  }
+}
+@media (min-width: 640px) {
+  :root {
+    --tv-gutter: 24px;
+  }
+}

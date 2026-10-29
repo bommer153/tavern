@@ -1,0 +1,46 @@
+{
+  "cli": {
+    "version": ">= 16.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://192.168.1.10:4000/api/v1",
+        "EXPO_PUBLIC_SOCKET_URL": "http://192.168.1.10:4000"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api.staging.tavern.ph/api/v1",
+        "EXPO_PUBLIC_SOCKET_URL": "https://api.staging.tavern.ph",
+        "EXPO_PUBLIC_WEB_URL": "https://staging.tavern.ph"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api.tavern.ph/api/v1",
+        "EXPO_PUBLIC_SOCKET_URL": "https://api.tavern.ph",
+        "EXPO_PUBLIC_WEB_URL": "https://tavern.ph"
+      }
+    },
+    "lan": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://192.168.1.12:4000/api/v1",
+        "EXPO_PUBLIC_SOCKET_URL": "http://192.168.1.12:4000",
+        "EXPO_PUBLIC_WEB_URL": "http://192.168.1.12:3000"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

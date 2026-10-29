@@ -1,0 +1,137 @@
+/* Auth — "the Gate": the Tavern world on one side, the door on the other. */
+
+.gate {
+  min-height: 100dvh;
+  display: grid;
+  background: var(--tv-bg);
+}
+@media (min-width: 960px) {
+  .gate {
+    grid-template-columns: minmax(0, 1.1fr) minmax(420px, 1fr);
+  }
+}
+.world {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--tv-s6);
+  padding: var(--tv-s6) var(--tv-gutter);
+  overflow: hidden;
+  background:
+    radial-gradient(900px 500px at 20% 10%, rgb(124 77 255 / 0.22), transparent 60%),
+    radial-gradient(600px 400px at 80% 100%, rgb(34 211 238 / 0.1), transparent 60%),
+    repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 14px),
+    var(--tv-void);
+  border-bottom: 1px solid var(--tv-line);
+}
+@media (min-width: 960px) {
+  .world {
+    padding: var(--tv-s7);
+    border-bottom: 0;
+    border-right: 1px solid var(--tv-line);
+  }
+}
+.pitch {
+  position: relative;
+  z-index: 1;
+  max-width: 420px;
+}
+.pitchTitle {
+  margin-top: var(--tv-s2);
+  font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+}
+.pitchSub {
+  margin-top: var(--tv-s2);
+  color: var(--tv-ink-2);
+}
+@media (max-width: 959px) {
+  .world {
+    min-height: 0;
+  }
+  .pitch {
+    display: none;
+  }
+}
+.door {
+  display: grid;
+  place-items: center;
+  padding: var(--tv-s6) var(--tv-gutter) var(--tv-s8);
+}
+.plate {
+  --c: var(--tv-cut-lg);
+  width: 100%;
+  max-width: 440px;
+  padding: var(--tv-s7) var(--tv-s6);
+}
+@media (max-width: 479px) {
+  .plate {
+    padding: var(--tv-s6) var(--tv-s4);
+  }
+}
+
+/* Shared by every auth form */
+.form {
+  display: grid;
+  gap: var(--tv-s4);
+}
+.title {
+  font-size: var(--tv-fs-2xl);
+}
+.sub {
+  margin-top: 4px;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+}
+.pair {
+  display: grid;
+  gap: var(--tv-s4);
+}
+@media (min-width: 480px) {
+  .pair {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.right {
+  text-align: right;
+  font-size: var(--tv-fs-sm);
+}
+.center {
+  display: grid;
+  gap: var(--tv-s3);
+  text-align: center;
+}
+.foot {
+  text-align: center;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+}
+.link {
+  color: var(--tv-violet-hi);
+  font-weight: 550;
+}
+.link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+}
+.terms input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: var(--tv-violet);
+}
+.err {
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-red);
+}
+.wide {
+  width: 100%;
+}

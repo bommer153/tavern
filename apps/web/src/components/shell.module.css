@@ -1,0 +1,329 @@
+/* App frame: an icon rail and top bar on desktop; a top bar and floating dock on phones. */
+
+.frame {
+  min-height: 100dvh;
+  display: flex;
+  background:
+    radial-gradient(1100px 600px at 75% -10%, rgb(124 77 255 / 0.16), transparent 65%),
+    radial-gradient(800px 500px at -10% 110%, rgb(34 211 238 / 0.06), transparent 60%),
+    var(--tv-bg);
+}
+.column {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Icon rail (desktop) ---------- */
+.rail {
+  position: sticky;
+  top: 0;
+  z-index: 41;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 76px;
+  height: 100dvh;
+  flex-shrink: 0;
+  padding: 16px 0;
+  background: rgb(8 7 28 / 0.72);
+  backdrop-filter: blur(14px);
+  border-right: 1px solid var(--tv-line);
+}
+.railLogo {
+  display: grid;
+  place-items: center;
+  margin-bottom: var(--tv-s4);
+  filter: drop-shadow(0 0 12px rgb(124 77 255 / 0.6));
+}
+.railItem {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  color: var(--tv-ink-3);
+  transition: color var(--tv-fast), background var(--tv-fast), box-shadow var(--tv-med);
+}
+.railItem:hover {
+  color: var(--tv-ink);
+  background: var(--tv-plate);
+}
+.railItem[aria-current='page'] {
+  color: #fff;
+  background: linear-gradient(180deg, #9a76ff, var(--tv-violet-lo));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.25), 0 0 24px -4px var(--tv-violet);
+}
+.railGold {
+  color: var(--tv-gold);
+}
+.railGold[aria-current='page'] {
+  color: #1a1305;
+  background: linear-gradient(180deg, #ffe0a0, #c99a3a);
+  box-shadow: 0 0 24px -6px var(--tv-gold);
+}
+/* Label appears as a tooltip to the right on hover and keyboard focus. */
+.railLabel {
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: var(--tv-fs-xs);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--tv-ink);
+  background: var(--tv-plate-3);
+  box-shadow: var(--tv-shadow-1);
+  opacity: 0;
+  transform: translate(-4px, -50%);
+  pointer-events: none;
+  transition: opacity var(--tv-fast), transform var(--tv-fast);
+}
+.railItem:hover .railLabel,
+.railItem:focus-visible .railLabel {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+.railBadge {
+  position: absolute;
+  top: 4px;
+  right: 2px;
+}
+
+/* ---------- Top bar ---------- */
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s4);
+  height: var(--tv-bar-h);
+  padding: 0 var(--tv-gutter);
+  background: rgb(11 10 34 / 0.78);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid var(--tv-line);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.wordmark {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.badge {
+  min-width: 18px;
+  padding: 0 5px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  color: #fff;
+  background: var(--tv-pink);
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px var(--tv-bg);
+}
+
+.search {
+  display: none;
+  flex: 1;
+  max-width: 480px;
+  margin-inline: auto;
+}
+.search input {
+  border-radius: 999px;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s2);
+  margin-left: auto;
+}
+.search + .actions {
+  margin-left: 0;
+}
+.searchIcon {
+  display: inline-grid;
+}
+
+/* Coin balance */
+.coins {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px 0 10px;
+  font-size: var(--tv-fs-sm);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  color: var(--tv-ink);
+  background: var(--tv-glass);
+  border: 1px solid var(--tv-line);
+  border-radius: 999px;
+  transition: border-color var(--tv-fast);
+}
+.coins svg {
+  color: var(--tv-gold);
+}
+.coins:hover {
+  border-color: rgb(245 199 106 / 0.5);
+}
+
+.avatarBtn {
+  display: inline-grid;
+  margin-left: var(--tv-s1);
+  padding: 2px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--tv-violet-hi), var(--tv-pink));
+}
+.avatarBtn:focus-visible {
+  box-shadow: var(--tv-focus-ring);
+}
+.menuHead {
+  display: block;
+  padding: 8px 10px 10px;
+}
+.menuName {
+  font-weight: 600;
+}
+.menuHandle {
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-ink-3);
+}
+
+.authLinks {
+  display: flex;
+  gap: var(--tv-s2);
+}
+
+/* ---------- Banner + main ---------- */
+.verify {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tv-s2);
+  padding: 8px var(--tv-gutter);
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-gold);
+  background: var(--tv-gold-wash);
+  border-bottom: 1px solid rgb(245 199 106 / 0.2);
+  text-align: center;
+}
+.verify button {
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.verify button:disabled {
+  text-decoration: none;
+  opacity: 0.7;
+}
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--tv-page-max);
+  margin: 0 auto;
+  padding: var(--tv-s5) var(--tv-gutter) calc(var(--tv-dock-h) + env(safe-area-inset-bottom) + var(--tv-s8));
+}
+
+/* ---------- Floating dock (phones) ---------- */
+.dock {
+  position: fixed;
+  left: 50%;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  width: min(calc(100% - 24px), 440px);
+  height: var(--tv-dock-h);
+  padding: 0 8px;
+  transform: translateX(-50%);
+  background: rgb(14 11 40 / 0.82);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--tv-line-hi);
+  border-radius: 999px;
+  box-shadow: 0 20px 50px -20px #000, 0 0 40px -18px var(--tv-violet);
+}
+.dockItem {
+  position: relative;
+  flex: 1;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 1px;
+  font-size: 10px;
+  font-weight: 550;
+  color: var(--tv-ink-3);
+}
+.well {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 28px;
+}
+.dockItem[aria-current='page'] {
+  color: var(--tv-ink);
+}
+.dockItem[aria-current='page'] .well {
+  color: var(--tv-violet-hi);
+  filter: drop-shadow(0 0 6px var(--tv-violet));
+}
+.dockBadge {
+  position: absolute;
+  top: -4px;
+  right: 0;
+}
+/* The Tavern core: a raised emblem button in the middle of the dock. */
+.core {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
+  margin: -26px 4px 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, #8b5cf6, #3b1d8f);
+  box-shadow: 0 0 0 4px rgb(14 11 40), 0 0 0 5px var(--tv-line-hi), 0 0 30px var(--tv-violet);
+  transition: transform var(--tv-med) var(--tv-ease-spring);
+}
+.core:active {
+  transform: scale(0.94);
+}
+
+@media (min-width: 860px) {
+  .rail {
+    display: flex;
+  }
+  .barLogo,
+  .dock {
+    display: none;
+  }
+  .main {
+    padding-bottom: var(--tv-s8);
+  }
+}
+@media (min-width: 1100px) {
+  .search {
+    display: block;
+  }
+  .searchIcon {
+    display: none;
+  }
+}
+@media (max-width: 380px) {
+  .wordmark {
+    display: none;
+  }
+}

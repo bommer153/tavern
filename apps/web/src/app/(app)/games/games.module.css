@@ -1,0 +1,84 @@
+/* Games — each one a door into its world. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: var(--tv-s4);
+}
+.door {
+  --c: var(--tv-cut-lg);
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--tv-med) var(--tv-ease);
+}
+.door:hover {
+  --plate-edge: var(--tv-line-hi);
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -22px var(--tv-violet);
+}
+.art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 168px;
+  overflow: hidden;
+}
+.art::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 40%, rgb(255 255 255 / 0.22), transparent 60%),
+    linear-gradient(0deg, var(--tv-plate), transparent 60%);
+}
+.logo {
+  width: 58%;
+  max-height: 46%;
+  object-fit: contain;
+  transition: transform var(--tv-slow) var(--tv-ease);
+}
+.door:hover .logo {
+  transform: scale(1.08);
+}
+.art > * {
+  position: relative;
+  filter: drop-shadow(0 8px 16px rgb(0 0 0 / 0.4));
+}
+.body {
+  display: grid;
+  gap: 4px;
+  padding: var(--tv-s4) var(--tv-s5) var(--tv-s5);
+}
+.name {
+  font-size: var(--tv-fs-lg);
+}
+.roles {
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tv-s4);
+  margin-top: var(--tv-s3);
+  font-size: var(--tv-fs-sm);
+  font-weight: 600;
+}
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.primary {
+  color: var(--tv-violet-hi);
+}
+.secondary {
+  color: var(--tv-ink-2);
+}
+.primary:hover,
+.secondary:hover {
+  color: var(--tv-ink);
+}

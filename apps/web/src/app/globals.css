@@ -1,0 +1,3 @@
+/* Tavern stylesheet entry. Everything here is handwritten; see src/styles/. */
+@import '../styles/tokens.css';
+@import '../styles/base.css';

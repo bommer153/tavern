@@ -1,0 +1,206 @@
+/* Discover — a game-world banner you steer with the game selector, then people in themed rails. */
+
+.world {
+  --c: var(--tv-cut-lg);
+  --plate-fill: var(--tv-bg-2);
+  overflow: hidden;
+}
+.worldInner {
+  position: relative;
+  z-index: 1;
+  padding: var(--tv-s6);
+}
+.worldHead {
+  max-width: min(62%, 460px);
+}
+.worldTitle {
+  margin-top: 6px;
+  font-size: clamp(1.4rem, 3vw, 2.1rem);
+}
+.worldSub {
+  margin-top: 6px;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.searchRow {
+  display: flex;
+  gap: var(--tv-s2);
+  max-width: 600px;
+  margin-top: var(--tv-s4);
+}
+.searchRow input {
+  border-radius: 999px;
+  background: rgb(11 10 34 / 0.8);
+  backdrop-filter: blur(6px);
+}
+.filterCount {
+  min-width: 18px;
+  padding: 0 4px;
+  font-size: 10px;
+  line-height: 16px;
+  color: #fff;
+  background: var(--tv-violet);
+  border-radius: 999px;
+}
+@media (max-width: 639px) {
+  .worldInner {
+    padding: var(--tv-s4);
+  }
+  .filterLabel {
+    display: none;
+  }
+}
+
+/* Game selector: logo tiles; hover/focus previews the game in the scene, click filters */
+.games {
+  display: flex;
+  gap: var(--tv-s2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: var(--tv-s5) calc(var(--tv-s6) * -1) 0;
+  padding: 4px var(--tv-s6) 8px;
+}
+@media (max-width: 639px) {
+  .games {
+    margin-inline: calc(var(--tv-s4) * -1);
+    padding-inline: var(--tv-s4);
+  }
+}
+.game {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+  width: 104px;
+  height: 108px;
+  padding: var(--tv-s2);
+  font-size: var(--tv-fs-xs);
+  font-weight: 600;
+  text-align: center;
+  color: var(--tv-ink-2);
+  background: var(--tv-glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--tv-line);
+  border-radius: 16px;
+  transition: color var(--tv-fast), border-color var(--tv-med), box-shadow var(--tv-med), transform var(--tv-med) var(--tv-ease);
+}
+.game:hover {
+  color: var(--tv-ink);
+  border-color: var(--tv-line-hi);
+  transform: translateY(-3px);
+}
+.game[aria-pressed='true'] {
+  color: #fff;
+  border-color: var(--tv-violet);
+  background: linear-gradient(180deg, rgb(124 77 255 / 0.35), rgb(124 77 255 / 0.12));
+  box-shadow: 0 0 24px -6px var(--tv-violet);
+}
+.game:focus-visible {
+  box-shadow: var(--tv-focus-ring);
+}
+.token {
+  transition: transform var(--tv-med) var(--tv-ease-spring);
+}
+.game:hover .token,
+.game[aria-pressed='true'] .token {
+  transform: scale(1.1);
+}
+.allGames::before {
+  content: '';
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: conic-gradient(from 200deg, var(--tv-violet), var(--tv-cyan), var(--tv-pink), var(--tv-violet));
+  mask: radial-gradient(circle, transparent 38%, #000 40%);
+}
+
+/* Quick toggles under the banner */
+.quick {
+  display: flex;
+  gap: var(--tv-s2);
+  margin: var(--tv-s4) 0 var(--tv-s6);
+}
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 14px;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+  background: var(--tv-bg-2);
+  box-shadow: inset 0 0 0 1px var(--tv-line);
+  border-radius: 999px;
+}
+.toggle:hover {
+  color: var(--tv-ink);
+}
+.toggle[aria-pressed='true'] {
+  color: var(--tv-ink);
+  box-shadow: inset 0 0 0 1px var(--tv-mint);
+  background: var(--tv-mint-wash);
+}
+.toggleVoice[aria-pressed='true'] {
+  box-shadow: inset 0 0 0 1px var(--tv-violet);
+  background: var(--tv-violet-wash);
+}
+.toggle:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--tv-violet-hi);
+}
+.onlinePip {
+  width: 8px;
+  height: 9px;
+  clip-path: var(--tv-hex);
+  background: var(--tv-mint);
+}
+
+.rails {
+  display: grid;
+  /* minmax(0, …) stops the scrolling rails from stretching the column (and the page) to their full content width. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--tv-s7);
+}
+.plaque {
+  width: 216px;
+}
+.stage {
+  width: 280px;
+}
+/* Phones: companion rails become a two-column grid of compact cards instead of one big card per swipe. */
+@media (max-width: 639px) {
+  .rails .peopleRail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--tv-s3);
+    overflow: visible;
+    margin-inline: 0;
+    padding: 0;
+    scroll-snap-type: none;
+  }
+  .peopleRail > .plaque {
+    width: auto;
+  }
+}
+.total {
+  margin-bottom: var(--tv-s3);
+  font-family: var(--tv-mono);
+  font-size: var(--tv-fs-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tv-ink-3);
+}
+.pager {
+  display: flex;
+  justify-content: center;
+  gap: var(--tv-s2);
+  margin-top: var(--tv-s6);
+}
+.price {
+  display: flex;
+  gap: var(--tv-s2);
+}

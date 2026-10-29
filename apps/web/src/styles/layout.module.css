@@ -1,0 +1,204 @@
+/* Recurring page layouts, named for what they do. Feature-specific composition lives in each route's own module. */
+
+.stack {
+  display: grid;
+  gap: var(--tv-s6);
+  align-content: start;
+  min-width: 0;
+}
+.stackSm {
+  display: grid;
+  gap: var(--tv-s3);
+  align-content: start;
+  min-width: 0;
+}
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tv-s2);
+}
+.between {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tv-s3);
+}
+.end {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--tv-s2);
+}
+.center {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--tv-s2);
+}
+
+/* Main column + supporting column; stacks below 1100px. */
+.split {
+  display: grid;
+  gap: var(--tv-s6);
+  align-items: start;
+}
+@media (min-width: 1100px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr) 340px;
+  }
+}
+.narrow {
+  max-width: 680px;
+  margin-inline: auto;
+}
+.form {
+  display: grid;
+  gap: var(--tv-s4);
+}
+.formGrid {
+  display: grid;
+  gap: var(--tv-s3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+}
+.full {
+  grid-column: 1 / -1;
+}
+
+/* Divided list: rows separated by hairlines, a violet tick marks hover. */
+.rows {
+  --c: var(--tv-cut);
+  border-radius: var(--c);
+  background: var(--tv-bg-2);
+}
+.rows > * + * {
+  border-top: 1px solid var(--tv-line);
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--tv-s3);
+  padding: var(--tv-s3) var(--tv-s4);
+  min-width: 0;
+  transition: background var(--tv-fast);
+}
+a.row:hover,
+button.row:hover {
+  background: var(--tv-plate);
+  box-shadow: inset 3px 0 0 var(--tv-violet);
+}
+a.row:focus-visible,
+button.row:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--tv-violet-hi);
+}
+.rowMain {
+  flex: 1;
+  min-width: 0;
+}
+.rowTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.rowMeta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+}
+
+/* Text */
+.muted {
+  color: var(--tv-ink-2);
+}
+.small {
+  font-size: var(--tv-fs-sm);
+}
+.fine {
+  font-size: var(--tv-fs-xs);
+  color: var(--tv-ink-3);
+}
+.strong {
+  font-weight: 600;
+}
+.mono {
+  font-family: var(--tv-mono);
+  font-variant-numeric: tabular-nums;
+}
+.pre {
+  white-space: pre-line;
+}
+.gold {
+  color: var(--tv-gold);
+}
+.mint {
+  color: var(--tv-mint);
+}
+.h2 {
+  font-size: var(--tv-fs-lg);
+  font-weight: 650;
+}
+
+/* Stat readouts: figure over a mono label, separated by hairlines */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
+  background: var(--tv-line);
+}
+.stat {
+  display: grid;
+  gap: 2px;
+  padding: var(--tv-s4);
+  background: var(--tv-bg-2);
+}
+.statValue {
+  font-size: var(--tv-fs-xl);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Data tables (orders, admin) */
+.tableWrap {
+  overflow-x: auto;
+  background: var(--tv-bg-2);
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--tv-fs-sm);
+}
+.table th {
+  padding: 10px var(--tv-s3);
+  text-align: left;
+  white-space: nowrap;
+  font-family: var(--tv-mono);
+  font-size: var(--tv-fs-2xs);
+  font-weight: 500;
+  letter-spacing: var(--tv-tracking-label);
+  text-transform: uppercase;
+  color: var(--tv-ink-3);
+  border-bottom: 1px solid var(--tv-line-2);
+}
+.table td {
+  padding: 10px var(--tv-s3);
+  border-bottom: 1px solid var(--tv-line);
+  vertical-align: middle;
+}
+.table tr:hover td {
+  background: var(--tv-plate);
+}
+
+/* Full-width control (primary actions in dialogs and narrow panels) */
+.wide {
+  width: 100%;
+}
+.quote {
+  padding: var(--tv-s3) var(--tv-s4);
+  font-size: var(--tv-fs-sm);
+  color: var(--tv-ink-2);
+  background: linear-gradient(90deg, var(--tv-line-2) 0 2px, var(--tv-bg-2) 2px);
+}
