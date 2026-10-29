@@ -465,6 +465,41 @@
   color: var(--tv-ink);
   margin-right: 4px;
 }
+/* Gift lines stand out from chat: pink wash, gift glyph, coin value on the right. */
+.giftLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgb(244 114 182 / 0.16), rgb(245 199 106 / 0.08));
+  box-shadow: inset 0 0 0 1px rgb(244 114 182 / 0.3);
+}
+.giftLine > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+.giftCoins,
+.tally {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--tv-mono);
+  font-weight: 600;
+  color: var(--tv-gold);
+  white-space: nowrap;
+}
+.giftCoins {
+  font-size: var(--tv-fs-xs);
+}
+.tally {
+  padding: 0 6px;
+  font-size: 10px;
+  line-height: 16px;
+  border-radius: 999px;
+  background: rgb(6 5 26 / 0.7);
+  box-shadow: inset 0 0 0 1px rgb(245 199 106 / 0.35);
+}
 .chatForm {
   display: flex;
   gap: var(--tv-s2);

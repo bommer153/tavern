@@ -1,5 +1,6 @@
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { RoomChatGift } from '@tavern/api-client';
 import { type CosmeticCollection, DEFAULT_BACKGROUND, type GiftRarity, type RoomMember } from '@tavern/shared';
 import { ConnectionState, Room, RoomEvent, Track } from 'livekit-client';
 import Link from 'next/link';
@@ -18,8 +19,8 @@ import { api, ApiError, errorMessage } from '@/lib/api';
 import { RequireRole, useSession } from '@/lib/session';
 import s from './room.module.css';
 
-type ChatMsg = { id: string; sender: { displayName?: string }; body: string };
-type GiftEvent = { transactionId: string; gift: { imageUrl: string; name: string; animation?: string; rarity: GiftRarity }; quantity: number; sender: { displayName?: string }; recipient: { displayName?: string } };
+type ChatMsg = { id: string; sender: { displayName?: string }; body: string; gift?: RoomChatGift };
+type GiftEvent = { transactionId: string; gift: { imageUrl: string; name: string; animation?: string; rarity: GiftRarity }; quantity: number; totalCoins: number; sender: { displayName?: string }; recipient: { id: string; displayName?: string } };
 type Voice = 'off' | 'connecting' | 'connected' | 'reconnecting' | 'unavailable' | 'failed';
 type Sheet = 'chat' | 'people' | 'view' | 'rules' | null;
 
@@ -57,6 +58,7 @@ function RoomView() {
   const [burst, setBurst] = useState<GiftEvent | null>(null);
   const [reporting, setReporting] = useState(false);
   const [msgs, setMsgs] = useState<ChatMsg[]>([]);
+  const giftsToday = useQuery({ queryKey: ['room-gifts-today', id], queryFn: () => api.rooms.giftsToday(id), enabled: !!me });
   const [unread, setUnread] = useState(0);
   const [previewTheme, setPreviewTheme] = useState<string | null | undefined>(undefined);
   const roomRef = useRef<Room | null>(null);
@@ -157,6 +159,7 @@ function RoomView() {
     const onGift = (g: GiftEvent) => {
       // Everyone in the room, sender included, sees the full-screen effect from this one event.
       playGiftEffect({ id: g.transactionId, image: g.gift.imageUrl, animation: g.gift.animation, rarity: g.gift.rarity, quantity: g.quantity });
+      qc.setQueryData<Record<string, number>>(['room-gifts-today', id], (t) => t && { ...t, [g.recipient.id]: (t[g.recipient.id] ?? 0) + g.totalCoins });
       setBurst(g);
       setTimeout(() => setBurst((b) => (b?.transactionId === g.transactionId ? null : b)), 2600);
     };
@@ -363,6 +366,7 @@ function RoomView() {
               {featured.role !== 'speaker' && <span className={cn(s.role, featured.role === 'host' && s.roleHost)}>{featured.role}</span>}
             </p>
             <p className={s.featState} aria-live="polite">{SEAT_STATE_LABEL[seatState(featured)] || (connected ? 'on stage' : '')}</p>
+            <GiftTally coins={giftsToday.data?.[featured.user.id]} />
           </div>
         ) : (
           <p className={s.emptyStage}>No one is on stage yet.</p>
@@ -375,6 +379,7 @@ function RoomView() {
             <SeatFrame frame={m.frame} name={m.user.displayName} src={m.user.avatarUrl} size={seat} state={seatState(m)} level={levelOf(m.user.id)} />
             {m.handRaised && <Icon name="hand" size={14} className={s.hand} />}
             <span className={s.seatName}>{m.user.id === me?.id ? 'You' : m.user.displayName}</span>
+            <GiftTally coins={giftsToday.data?.[m.user.id]} />
           </button>
         ))}
         {extra > 0 && (
@@ -396,7 +401,7 @@ function RoomView() {
           </span>
         ) : lastMsg ? (
           <span>
-            <b>{lastMsg.sender.displayName}</b> {lastMsg.body}
+            <b>{lastMsg.sender.displayName}</b> {lastMsg.gift ? `sent ${lastMsg.gift.recipientName} ${lastMsg.gift.quantity > 1 ? `${lastMsg.gift.quantity}× ` : ''}${lastMsg.gift.name}` : lastMsg.body}
           </span>
         ) : (
           <span className={s.muted}>{r.chatEnabled ? 'Say hi in the room chat' : 'Chat is off in this room'}</span>
@@ -573,6 +578,16 @@ function People({
   );
 }
 
+/** Coins received as gifts in this room today; hidden until someone gets one. */
+function GiftTally({ coins }: { coins?: number }) {
+  if (!coins) return null;
+  return (
+    <span className={s.tally} aria-label={`${coins.toLocaleString()} gift coins received today`}>
+      <Icon name="coin" size={11} /> {coins >= 10_000 ? `${(coins / 1000).toFixed(coins >= 100_000 ? 0 : 1)}k` : coins.toLocaleString()}
+    </span>
+  );
+}
+
 function RoomChat({ id, msgs, canSend, enabled }: { id: string; msgs: ChatMsg[]; canSend: boolean; enabled: boolean }) {
   const [text, setText] = useState('');
   const [err, setErr] = useState<string | null>(null);
@@ -584,11 +599,21 @@ function RoomChat({ id, msgs, canSend, enabled }: { id: string; msgs: ChatMsg[];
   return (
     <div className={s.chat}>
       <div ref={log} className={s.chatLog} aria-live="polite">
-        {msgs.length ? msgs.map((m) => (
-          <p key={m.id}>
-            <b>{m.sender.displayName}</b> {m.body}
-          </p>
-        )) : <p className={s.muted}>{enabled ? 'No messages yet.' : 'Chat is off in this room.'}</p>}
+        {msgs.length ? msgs.map((m) =>
+          m.gift ? (
+            <p key={m.id} className={s.giftLine}>
+              <GiftGlyph image={m.gift.imageUrl} size={20} />
+              <span>
+                <b>{m.sender.displayName}</b> sent <b>{m.gift.recipientName}</b> {m.gift.quantity > 1 && `${m.gift.quantity}× `}{m.gift.name}
+              </span>
+              <span className={s.giftCoins}><Icon name="coin" size={12} /> {m.gift.coins.toLocaleString()}</span>
+            </p>
+          ) : (
+            <p key={m.id}>
+              <b>{m.sender.displayName}</b> {m.body}
+            </p>
+          ),
+        ) :<p className={s.muted}>{enabled ? 'No messages yet.' : 'Chat is off in this room.'}</p>}
       </div>
       <form
         className={s.chatForm}

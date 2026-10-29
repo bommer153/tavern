@@ -28,6 +28,7 @@ export class VoiceService {
     @InjectM('VoiceRoomMember') private members: M<'VoiceRoomMember'>,
     @InjectM('RoomInvitation') private invitations: M<'RoomInvitation'>,
     @InjectM('RoomMessage') private roomMessages: M<'RoomMessage'>,
+    @InjectM('GiftTransaction') private giftTx: M<'GiftTransaction'>,
     @InjectM('User') private users: M<'User'>,
     @InjectM('Game') private games: M<'Game'>,
   ) {
@@ -241,7 +242,20 @@ export class VoiceService {
     const r = await this.room(id);
     if (!(await this.canView(r, userId))) throw notFound('Room');
     const rows = await this.roomMessages.find({ roomId: id }).sort({ createdAt: -1 }).limit(50).populate('senderId', 'displayName').lean();
-    return rows.reverse().map((m: any) => ({ id: String(m._id), sender: { id: String(m.senderId?._id), displayName: m.senderId?.displayName }, body: m.body, createdAt: m.createdAt }));
+    return rows.reverse().map((m: any) => ({ id: String(m._id), sender: { id: String(m.senderId?._id), displayName: m.senderId?.displayName }, body: m.body, gift: m.gift ?? undefined, createdAt: m.createdAt }));
+  }
+
+  /** Coins each person has received as gifts in this room since midnight Philippine time: { userId: coins }. */
+  async giftsToday(id: string, userId: string) {
+    const r = await this.room(id);
+    if (!(await this.canView(r, userId))) throw notFound('Room');
+    const PH = 8 * 3600_000; // UTC+8, no DST
+    const since = new Date(Math.floor((Date.now() + PH) / 86_400_000) * 86_400_000 - PH);
+    const rows = await this.giftTx.aggregate<{ _id: unknown; coins: number }>([
+      { $match: { contextId: r._id, context: 'room', createdAt: { $gte: since } } },
+      { $group: { _id: '$recipientId', coins: { $sum: '$totalCoins' } } },
+    ]);
+    return Object.fromEntries(rows.map((x) => [String(x._id), x.coins]));
   }
 
   async chat(id: string, userId: string, body: string) {
@@ -345,6 +359,11 @@ class VoiceController {
   @Get(':id/messages')
   messages(@CurrentUser() u: AuthUser, @Param('id', ObjectIdPipe) id: string) {
     return this.voice.chatHistory(id, u.id);
+  }
+
+  @Get(':id/gifts/today')
+  giftsToday(@CurrentUser() u: AuthUser, @Param('id', ObjectIdPipe) id: string) {
+    return this.voice.giftsToday(id, u.id);
   }
 
   @Post(':id/messages')

@@ -42,6 +42,14 @@ export class ApiError extends Error {
   }
 }
 
+export interface RoomChatGift {
+  name: string;
+  imageUrl: string;
+  quantity: number;
+  coins: number;
+  recipientName: string;
+}
+
 export interface ClientOptions {
   baseUrl: string; // e.g. http://localhost:4000/api/v1
   /** web: cookies carry the session. */
@@ -207,10 +215,11 @@ export function createApiClient(opts: ClientOptions) {
       invite: (id: string, userId: string) => post<void>(`/voice-rooms/${id}/invite`, { userId }),
       close: (id: string) => post<void>(`/voice-rooms/${id}/close`),
       setTheme: (id: string, b: RoomThemeInput) => post<void>(`/voice-rooms/${id}/theme`, b),
-      messages: (id: string) => get<{ id: string; sender: { displayName: string }; body: string; createdAt: string }[]>(
-        `/voice-rooms/${id}/messages`,
-      ),
+      messages: (id: string) =>
+        get<{ id: string; sender: { displayName: string }; body: string; gift?: RoomChatGift; createdAt: string }[]>(`/voice-rooms/${id}/messages`),
       sendMessage: (id: string, body: string) => post<void>(`/voice-rooms/${id}/messages`, { body }),
+      /** Gift coins each user received in this room today (PH time), keyed by user id. */
+      giftsToday: (id: string) => get<Record<string, number>>(`/voice-rooms/${id}/gifts/today`),
     },
     notifications: {
       list: (page = 1) => get<Paginated<Notification> & { unread: number }>('/notifications', { page }),

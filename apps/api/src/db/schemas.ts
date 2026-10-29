@@ -347,7 +347,13 @@ export const RoomInvitationSchema = new Schema(
 RoomInvitationSchema.index({ roomId: 1, inviteeId: 1 }, { unique: true });
 
 export const RoomMessageSchema = new Schema(
-  { roomId: ref('VoiceRoom'), senderId: ref('User'), body: { type: String, maxlength: 500 } },
+  {
+    roomId: ref('VoiceRoom'),
+    senderId: ref('User'),
+    body: { type: String, maxlength: 500 },
+    // Set on gift entries in the chat log; body is empty for those.
+    gift: { _id: false, type: { name: String, imageUrl: String, quantity: Number, coins: Number, recipientName: String } },
+  },
   immutable,
 );
 RoomMessageSchema.index({ roomId: 1, createdAt: -1 });
@@ -423,6 +429,7 @@ export const GiftTransactionSchema = new Schema(
 );
 GiftTransactionSchema.index({ senderId: 1, idempotencyKey: 1 }, { unique: true });
 GiftTransactionSchema.index({ recipientId: 1, createdAt: -1 });
+GiftTransactionSchema.index({ contextId: 1, createdAt: -1 }); // per-room gift totals
 
 // Catalog of seat frames and room backgrounds. Artwork lives in the client (keyed by `key`) or object storage, never in Mongo.
 export const CosmeticSchema = new Schema(

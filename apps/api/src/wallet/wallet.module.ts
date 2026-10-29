@@ -28,6 +28,7 @@ export class GiftsService {
     @InjectM('VoiceRoomMember') private roomMembers: M<'VoiceRoomMember'>,
     @InjectM('VoiceRoom') private rooms: M<'VoiceRoom'>,
     @InjectM('Order') private orders: M<'Order'>,
+    @InjectM('RoomMessage') private roomMessages: M<'RoomMessage'>,
   ) {}
 
   async send(
@@ -95,10 +96,17 @@ export class GiftsService {
         transactionId: String(txId),
         gift: { id: String(gift._id), name: gift.name, imageUrl: gift.imageUrl, animation: gift.animation || undefined, rarity: gift.rarity },
         quantity: i.quantity,
+        totalCoins,
         sender: { id: senderId, displayName: sender?.displayName },
         recipient: { id: i.recipientId, displayName: recipient.displayName },
       };
-      if (i.context === 'room' && i.contextId) this.rt.toRoom(i.contextId, 'room:gift', event);
+      if (i.context === 'room' && i.contextId) {
+        this.rt.toRoom(i.contextId, 'room:gift', event);
+        // Also a permanent line in the room chat log, so late joiners see it in history.
+        const gift = { name: event.gift.name, imageUrl: event.gift.imageUrl, quantity: i.quantity, coins: totalCoins, recipientName: recipient.displayName };
+        const m = await this.roomMessages.create({ roomId: i.contextId, senderId, body: '', gift });
+        this.rt.toRoom(i.contextId, 'room:message', { id: String(m._id), sender: { id: senderId, displayName: sender?.displayName }, body: '', gift, createdAt: m.createdAt });
+      }
       await this.notifications.notify(recipient._id, 'gift', 'You received a gift!', `${sender?.displayName} sent you ${i.quantity}× ${gift.name}`);
       return { transactionId: String(txId), balance };
     } catch (e) {
