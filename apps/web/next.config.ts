@@ -2,8 +2,8 @@ import type { NextConfig } from 'next';
 
 // Hosted (Render): the browser only talks to the web origin and Next forwards API + socket traffic to the API service,
 // so the API's auth cookies are first-party. Unset locally, where the web app calls localhost:4000 directly.
-// Falls back to the Render API URL when building on Render, so a missing dashboard variable can't silently disable it.
-const API_ORIGIN = process.env.API_ORIGIN || (process.env.RENDER ? 'https://tavern-api-68z5.onrender.com' : undefined);
+// Must stay listed under "env" in turbo.json: Turborepo strips undeclared variables from builds.
+const API_ORIGIN = process.env.API_ORIGIN;
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
